@@ -1,12 +1,14 @@
 import Header from '@/components/header';
-import { PanelBreadcrumb} from './helper';
+import {PanelBreadcrumb} from './helper';
 import {StatsGrid} from './components/stats-grid';
 
 const Panel = () => {
   return (
     <section>
       <Header breadcrumb={PanelBreadcrumb} />
-      <StatsGrid />
+      <div className='container mx-auto '>
+        <StatsGrid />
+      </div>
     </section>
   );
 };
