@@ -3,7 +3,15 @@ import {TestStatus, TestTypeStatus, type TTest} from './type';
 import type {ColumnDef} from '@tanstack/react-table';
 import {Button} from '@/components/ui/button';
 import {EyeIcon, Trash2} from 'lucide-react';
+import type {TBreadcrumb} from '@/components/header';
 
+export const AllTestBreadcrumb: TBreadcrumb[] = [
+  {title: 'الرئيسية', url: '/'},
+  {
+    title: 'الاختبارات',
+    url: '/tests/all'
+  }
+];
 export const TestColumns: ColumnDef<TTest>[] = [
   {
     accessorKey: 'name',

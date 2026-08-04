@@ -3,6 +3,16 @@ import {TestTypeStatus, type TTest} from './type';
 import type {ColumnDef} from '@tanstack/react-table';
 import {Button} from '@/components/ui/button';
 import {EyeIcon, Trash2} from 'lucide-react';
+import type {TBreadcrumb} from '@/components/header';
+
+export const PendingTestBreadcrumb: TBreadcrumb[] = [
+  {title: 'الرئيسية', url: '/'},
+  {
+    title: 'الاختبارات',
+    url: '/tests/all'
+  },
+  {title: 'المعلقة', url: '/tests/pending'}
+];
 
 export const TestColumns: ColumnDef<TTest>[] = [
   {

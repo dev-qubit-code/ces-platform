@@ -1,8 +1,11 @@
 import {DataTable} from '@/components/app-table';
 import {Input} from '@/components/ui/input';
-import {mockTestData, TestColumns} from './helper';
+import {AllTestBreadcrumb, mockTestData, TestColumns} from './helper';
+import {useHeader} from '@/store/header-store';
 
 const AllTest = () => {
+  const setBreadcrumb = useHeader(state => state.setBreadcrumb);
+  setBreadcrumb(AllTestBreadcrumb);
   return (
     <div className='flex flex-col gap-6 w-full'>
       <div className='flex flex-col gap-2'>
