@@ -5,6 +5,7 @@ import {SidebarInset, SidebarProvider} from './components/ui/sidebar';
 import {LayoutProvider} from './context/layout-provider';
 import Header from './components/header';
 import {useHeader} from './store/header-store';
+import {AppSheet} from './components/app-sheet';
 
 function App() {
   const breadcrumb = useHeader(state => state.breadcrumb);
@@ -18,6 +19,7 @@ function App() {
             <div className='container mx-auto p-4'>
               <Outlet />
             </div>
+            <AppSheet />
           </SidebarInset>
         </SidebarProvider>
       </LayoutProvider>
