@@ -1,4 +1,4 @@
-import {type ReactNode} from 'react';
+import {useState, type ReactNode} from 'react';
 import {Link, useLocation} from 'react-router';
 import {ChevronRight} from 'lucide-react';
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible';
@@ -6,6 +6,7 @@ import {SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sidebar
 import {Badge} from '../ui/badge';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {type NavCollapsible, type NavItem, type NavLink, type NavGroup as NavGroupProps} from './type';
+import { cn } from '@/lib/utils';
 
 export function NavGroup({title, items}: NavGroupProps) {
   const {state, isMobile} = useSidebar();
@@ -51,15 +52,16 @@ function SidebarMenuLink({item, href}: {item: NavLink; href: string}) {
 
 function SidebarMenuCollapsible({item, href}: {item: NavCollapsible; href: string}) {
   const {setOpenMobile} = useSidebar();
+  const [open, setOpen] = useState(checkIsActive(href, item, true));
   return (
-    <Collapsible defaultOpen={checkIsActive(href, item, true)} className='group/collapsible'>
+    <Collapsible open={open} onOpenChange={setOpen} className='group/collapsible'>
       <SidebarMenuItem>
-        <CollapsibleTrigger>
+        <CollapsibleTrigger className={'w-full'}>
           <SidebarMenuButton tooltip={item.title}>
             {item.icon && <item.icon />}
             <span>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
-            <ChevronRight className='ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180' />
+            <ChevronRight className={cn(`ms-auto transition-transform duration-200 rtl:rotate-180`,open ? 'rotate-90!' : '')} />
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent className='CollapsibleContent'>
