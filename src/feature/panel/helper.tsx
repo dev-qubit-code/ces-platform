@@ -5,7 +5,7 @@ import type {VariantProps} from 'class-variance-authority';
 export const PanelBreadcrumb: TBreadcrumb[] = [{title: 'الرئيسية', url: '/'}];
 
 import {Users, ClipboardList, FileText, Clock, GraduationCap, FolderGit2, AlertTriangle} from 'lucide-react';
-import type {TRecentExams, TResentStatus} from './type';
+import type {TRecentExams, TTestStatus} from './type';
 
 export const dashboardStats = [
   {
@@ -85,7 +85,7 @@ export const recentExamsData: TRecentExams[] = [
   }
 ];
 
-export const resentStatus: Record<TResentStatus, VariantProps<typeof badgeVariants>['variant']> = {
+export const resentStatus: Record<TTestStatus, VariantProps<typeof badgeVariants>['variant']> = {
   pending: 'invert-light',
   approved: 'success',
   rejected: 'destructive'

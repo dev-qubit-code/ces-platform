@@ -1,7 +1,7 @@
-export type TResentStatus = 'pending' | 'approved' | 'rejected';
+export type TTestStatus = 'pending' | 'approved' | 'rejected';
 export type TRecentExams = {
   id: number;
-  status: TResentStatus;
+  status: TTestStatus;
   examTitle: string;
   timeAgo: string;
 };
