@@ -68,6 +68,13 @@ const Routers = createBrowserRouter([
         }
       },
       {
+        path: '/issus',
+        lazy: async () => {
+          const {default: Component} = await import('@/feature/issus');
+          return {Component};
+        }
+      },
+      {
         path: '/about',
         lazy: async () => {
           const {default: Component} = await import('@/feature/about');

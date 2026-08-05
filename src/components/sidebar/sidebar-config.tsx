@@ -66,7 +66,7 @@ export const sidebarData: SidebarData = {
         {
           title: 'الشكاوي',
           icon: Bug,
-          url: '/issuss'
+          url: '/issus'
         },
         {
           title: 'نبدة المطورين',
