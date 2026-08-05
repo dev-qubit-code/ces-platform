@@ -3,6 +3,15 @@ import type {TLecturers} from './type';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {MoreHorizontal, Edit, Trash} from 'lucide-react';
 import {Button} from '@/components/ui/button';
+import type {TBreadcrumb} from '@/components/header';
+
+export const LecturersBreadcrumb: TBreadcrumb[] = [
+  {title: 'الرئيسية', url: '/'},
+  {
+    title: 'الدكاترة',
+    url: '/lecturers'
+  }
+];
 
 export const LecturersColumns: ColumnDef<TLecturers>[] = [
   {

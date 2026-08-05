@@ -3,7 +3,15 @@ import type {TCourse} from './type';
 import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {MoreHorizontal, Edit, Trash} from 'lucide-react';
 import {Button} from '@/components/ui/button';
+import type {TBreadcrumb} from '@/components/header';
 
+export const CoursesBreadcrumb: TBreadcrumb[] = [
+  {title: 'الرئيسية', url: '/'},
+  {
+    title: 'المادة',
+    url: '/courses'
+  }
+];
 export const CourseColumns: ColumnDef<TCourse>[] = [
   {
     accessorKey: 'name',

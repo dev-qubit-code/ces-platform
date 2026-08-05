@@ -4,10 +4,13 @@ import {Button} from '@/components/ui/button';
 import {Plus} from 'lucide-react';
 import {useAppSheet} from '@/store/sheet-store';
 import AddLecturersForm from './components/add-lecturers-form';
-import {LecturersColumns as lecturersColumns, mockLecturersData} from './helper';
+import {LecturersBreadcrumb, LecturersColumns as lecturersColumns, mockLecturersData} from './helper';
+import {useHeader} from '@/store/header-store';
 
 const Lecturers = () => {
   const {setSheet, onClose} = useAppSheet();
+  const setBreadcrumb = useHeader(state => state.setBreadcrumb);
+  setBreadcrumb(LecturersBreadcrumb);
   function onClick() {
     setSheet({
       title: 'إضافة دكتور',
