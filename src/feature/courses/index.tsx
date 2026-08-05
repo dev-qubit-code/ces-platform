@@ -2,12 +2,15 @@ import {DataTable} from '@/components/app-table';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
 import {Plus} from 'lucide-react';
-import {CourseColumns, mockCourseData} from './helper';
+import {CourseColumns, CoursesBreadcrumb, mockCourseData} from './helper';
 import {useAppSheet} from '@/store/sheet-store';
 import AddCourseForm from './components/add-course-form';
+import {useHeader} from '@/store/header-store';
 
 const Courses = () => {
   const {setSheet, onClose} = useAppSheet();
+  const setBreadcrumb = useHeader(state => state.setBreadcrumb);
+  setBreadcrumb(CoursesBreadcrumb);
   function onClick() {
     setSheet({
       title: 'إضافة مادة',

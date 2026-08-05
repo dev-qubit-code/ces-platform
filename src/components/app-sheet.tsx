@@ -2,17 +2,21 @@ import {Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHea
 import {cn} from '@/lib/utils';
 import {useAppSheet} from '@/store/sheet-store';
 import {Button} from './ui/button';
-
+import {ScrollArea} from './ui/scroll-area';
 export function AppSheet() {
   const {sheet, onClose} = useAppSheet();
+
   return (
     <Sheet defaultOpen={false} open={!!sheet} onOpenChange={() => onClose()}>
-      <SheetContent dir='rtl'>
+      <SheetContent className={''} side='right' dir='rtl'>
         <SheetHeader>
           <SheetTitle className={'font-bold text-xl'}>{sheet?.title}</SheetTitle>
           <SheetDescription>{sheet?.description}</SheetDescription>
         </SheetHeader>
-        <div className={cn('px-4', sheet?.className)}>{sheet?.content}</div>
+        <ScrollArea className={'max-h-[calc(100vh-220px)]'}>
+          <div className={cn('px-4', sheet?.className)}>{sheet?.content}</div>
+        </ScrollArea>
+
         <SheetFooter>
           {sheet?.primaryAction && (
             <Button

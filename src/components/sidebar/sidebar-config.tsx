@@ -1,4 +1,4 @@
-import {LayoutDashboard, Bug, ListTodo, Package, Users, MessagesSquare, ShieldCheck, Command, InfoIcon} from 'lucide-react';
+import {LayoutDashboard, Bug, ListTodo, Package, Users, MessagesSquare, ShieldCheck, Command, InfoIcon, Users2} from 'lucide-react';
 import type {SidebarData} from './type';
 
 export const sidebarData: SidebarData = {
@@ -60,8 +60,13 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'المستخدمين',
-          icon: Bug,
+          icon: Users2,
           url: '/users'
+        },
+        {
+          title: 'الشكاوي',
+          icon: Bug,
+          url: '/issuss'
         },
         {
           title: 'نبدة المطورين',
