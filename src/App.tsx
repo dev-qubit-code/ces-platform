@@ -14,12 +14,13 @@ function App() {
       <LayoutProvider>
         <SidebarProvider>
           <AppSidebar />
-          <SidebarInset className=''>
+          <SidebarInset className='relative'>
             <Header breadcrumb={breadcrumb} />
             <div className='container mx-auto p-4'>
               <Outlet />
             </div>
             <AppSheet />
+            <footer className='absolute bottom-0 w-full border-t py-2 text-center text-sm text-muted-foreground'>جميع الحقوق محفوظة © {new Date().getFullYear()} جمعية الحاسوب</footer>
           </SidebarInset>
         </SidebarProvider>
       </LayoutProvider>
