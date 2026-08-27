@@ -7,16 +7,19 @@ import {Settings2} from 'lucide-react';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {Button} from '@/components/ui/button';
-import {DataTablePagination} from './app-pagenation';
+import {DataTablePagination, type DataTablePaginationProps} from './app-pagenation';
+import {IconLoader2} from '@tabler/icons-react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
   emptyMessage?: string;
   SearchElement?: ReactNode;
+  paginationProps?: DataTablePaginationProps;
 }
 
-export function DataTable<TData, TValue>({columns, data, SearchElement, emptyMessage = 'لا توجد بيانات لعرضها.'}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({columns, data, SearchElement, isLoading, paginationProps, emptyMessage = 'لا توجد بيانات لعرضها.'}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -67,7 +70,6 @@ export function DataTable<TData, TValue>({columns, data, SearchElement, emptyMes
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
       {/* الجدول */}
       <div className='rounded-md border bg-card text-card-foreground shadow-sm'>
         <Table>
@@ -81,7 +83,16 @@ export function DataTable<TData, TValue>({columns, data, SearchElement, emptyMes
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className='h-48 text-center'>
+                  <div className='flex items-center justify-center gap-2 text-muted-foreground'>
+                    <IconLoader2 className='h-6 w-6 animate-spin' />
+                    <span>جاري تحميل البيانات...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className='hover:bg-muted/50 data-[state=selected]:bg-muted'>
                   {row.getVisibleCells().map(cell => (
@@ -101,7 +112,7 @@ export function DataTable<TData, TValue>({columns, data, SearchElement, emptyMes
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {paginationProps && <DataTablePagination {...paginationProps} />}{' '}
     </div>
   );
 }
