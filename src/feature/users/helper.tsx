@@ -12,6 +12,7 @@ import {MoreHorizontal, Edit, Trash, StopCircleIcon} from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import type {VariantProps} from 'class-variance-authority';
+import {cn, formatDate} from '@/lib/utils';
 
 export const UsersBreadcrumb: TBreadcrumb[] = [
   {
@@ -43,100 +44,117 @@ const userStatus: Record<TStatus, {name: string; variant: VariantProps<typeof ba
     variant: 'destructive'
   }
 };
+interface GetUsersColumnsProps {
+  onUpdate: (id: string) => void;
+  onPause: ({name, status}: {name: string; status: TStatus}) => void;
+  onDelete: ({id, name}: {id: string; name: string}) => void;
+}
 
-export const UsersColumns: ColumnDef<TUser>[] = [
-  {
-    accessorKey: 'name',
-    header: 'اسم المستخدم'
-  },
+export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsProps): ColumnDef<TUser>[] {
+  return [
+    {
+      accessorKey: 'name',
+      header: 'اسم المستخدم'
+    },
 
-  {
-    accessorKey: 'email',
-    header: 'البريد الإلكتروني'
-  },
+    {
+      accessorKey: 'email',
+      header: 'البريد الإلكتروني'
+    },
 
-  {
-    accessorKey: 'role',
-    header: 'الصلاحية',
+    {
+      accessorKey: 'role',
+      header: 'الصلاحية',
 
-    cell: ({row}) => {
-      const role = row.original.role;
-      const {name, variant} = userRoleStatus[role];
-      return <Badge variant={variant}>{name}</Badge>;
+      cell: ({row}) => {
+        const role = row.original.role;
+        const {name, variant} = userRoleStatus[role];
+        return <Badge variant={variant}>{name}</Badge>;
+      }
+    },
+
+    {
+      accessorKey: 'createdAt',
+      header: 'تاريخ الانضمام',
+      cell: props => {
+        const createAt = props.row.original.createdAt;
+        return formatDate(createAt, 'dd/MM/yyyy - hh:mm a');
+      }
+    },
+    {
+      accessorKey: 'status',
+      header: 'الحالة',
+
+      cell: ({row}) => {
+        const status = row.original.status;
+        const {name, variant} = userStatus[status];
+        return <Badge variant={variant}>{name}</Badge>;
+      }
+    },
+    {
+      id: 'actions',
+
+      header: 'الإجراءات',
+
+      cell: props => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' size='icon'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => onUpdate(props.row.original.id)}>
+                <Edit className='ml-2 h-4 w-4' />
+                تعديل
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => {
+                  onPause({name: props.row.original.name, status: props.row.original.status});
+                }}
+                className={cn(props.row.original.status == 'active' ? 'text-destructive' : 'text-primary')}
+              >
+                <StopCircleIcon className='ml-2 h-4 w-4' />
+                {props.row.original.status == 'active' ? 'توقيف' : 'تفعيل'}
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={() => onDelete({id: props.row.original.id, name: props.row.original.name})} className='text-destructive'>
+                <Trash className='ml-2 h-4 w-4' />
+                حذف
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
     }
+  ];
+}
+
+export const userStatusMapper = {
+  active: {
+    label: 'مفعّل',
+    actionLabel: 'إيقاف المستخدم',
+    title: 'إيقاف المستخدم',
+    description: 'سيتم إيقاف الوصول إلى الحساب.',
+    messageTitle: 'هل تريد إيقاف هذا الحساب؟',
+    message: 'سيتم منع المستخدم من تسجيل الدخول والوصول إلى النظام. ويمكن إعادة تفعيل الحساب لاحقًا.',
+    badgeVariant: 'default' as const
   },
 
-  {
-    accessorKey: 'createdAt',
-    header: 'تاريخ الانضمام'
-  },
-  {
-    accessorKey: 'status',
-
-    header: 'الحالة',
-
-    cell: ({row}) => {
-      const status = row.original.status;
-      const {name, variant} = userStatus[status];
-      return <Badge variant={variant}>{name}</Badge>;
-    }
-  },
-  {
-    id: 'actions',
-
-    header: 'الإجراءات',
-
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant='ghost' size='icon'>
-            <MoreHorizontal className='h-4 w-4' />
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent dir='rtl' align='end'>
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem>
-              <Edit className='ml-2 h-4 w-4' />
-              تعديل
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className='text-destructive'>
-              <StopCircleIcon className='ml-2 h-4 w-4' />
-              توقيف
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className='text-destructive'>
-              <Trash className='ml-2 h-4 w-4' />
-              حذف
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
+  inactive: {
+    label: 'موقوف',
+    actionLabel: 'تفعيل المستخدم',
+    title: 'تفعيل المستخدم',
+    description: 'سيتم إعادة تفعيل الوصول إلى الحساب.',
+    messageTitle: 'هل تريد تفعيل هذا الحساب؟',
+    message: 'سيتمكن المستخدم من تسجيل الدخول والوصول إلى النظام مرة أخرى.',
+    badgeVariant: 'secondary' as const
   }
-];
-
-export const mockUsersData: TUser[] = [
-  {
-    id: '1',
-    name: 'عبدالرحمن',
-    email: 'abdo@test.com',
-    role: 'admin',
-    status: 'active',
-    createdAt: '2026-08-01'
-  },
-
-  {
-    id: '2',
-    name: 'محمد',
-    email: 'mohamed@test.com',
-    role: 'manager',
-    status: 'inactive',
-    createdAt: '2026-07-20'
-  }
-];
+} satisfies Record<TStatus, object>;

@@ -1,5 +1,7 @@
 import {clsx, type ClassValue} from 'clsx';
 import {twMerge} from 'tailwind-merge';
+import {format} from 'date-fns';
+import {ar} from 'date-fns/locale';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -41,4 +43,10 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
   }
 
   return rangeWithDots;
+}
+
+export function formatDate(date: string | Date, dateFormat = 'dd/MM/yyyy'): string {
+  return format(new Date(date), dateFormat, {
+    locale: ar
+  });
 }

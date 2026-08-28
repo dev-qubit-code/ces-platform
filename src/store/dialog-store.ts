@@ -1,5 +1,6 @@
 import type {ReactNode} from 'react';
 import {create} from 'zustand';
+
 type TAction = {
   text: string;
   formId?: string;
@@ -7,26 +8,30 @@ type TAction = {
   onClick?: () => void;
   disabled?: boolean;
 };
-export type SheetProps = {
+
+export type DialogProps = {
   title: string;
-  description: string;
+  description?: string;
   content: ReactNode;
   className?: string;
   primaryAction?: TAction;
   secondaryAction?: TAction;
 };
-export type TAppSheet = {
-  sheet: SheetProps | null;
-  setSheet: (value: SheetProps) => void;
+
+export type TAppDialog = {
+  dialog: DialogProps | null;
+  setDialog: (value: DialogProps) => void;
   onClose: () => void;
 };
 
-export const useAppSheet = create<TAppSheet>(set => ({
-  sheet: null,
-  onClose: () => {
-    set({sheet: null});
+export const useAppDialog = create<TAppDialog>(set => ({
+  dialog: null,
+
+  setDialog: value => {
+    set({dialog: value});
   },
-  setSheet: value => {
-    set({sheet: value});
+
+  onClose: () => {
+    set({dialog: null});
   }
 }));
