@@ -12,6 +12,7 @@ import {MoreHorizontal, Edit, Trash, StopCircleIcon} from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import type {VariantProps} from 'class-variance-authority';
+import {cn} from '@/lib/utils';
 
 export const UsersBreadcrumb: TBreadcrumb[] = [
   {
@@ -46,9 +47,10 @@ const userStatus: Record<TStatus, {name: string; variant: VariantProps<typeof ba
 interface GetUsersColumnsProps {
   onUpdate: (id: string) => void;
   onPause: ({name, status}: {name: string; status: TStatus}) => void;
+  onDelete: (name: string) => void;
 }
 
-export function GetUsersColumns({onUpdate, onPause}: GetUsersColumnsProps): ColumnDef<TUser>[] {
+export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsProps): ColumnDef<TUser>[] {
   return [
     {
       accessorKey: 'name',
@@ -114,13 +116,13 @@ export function GetUsersColumns({onUpdate, onPause}: GetUsersColumnsProps): Colu
                 onClick={() => {
                   onPause({name: props.row.original.name, status: props.row.original.status});
                 }}
-                className='text-destructive'
+                className={cn(props.row.original.status == 'active' ? 'text-destructive' : 'text-primary')}
               >
                 <StopCircleIcon className='ml-2 h-4 w-4' />
-                توقيف
+                {props.row.original.status == 'active' ? 'توقيف' : 'تفعيل'}
               </DropdownMenuItem>
 
-              <DropdownMenuItem className='text-destructive'>
+              <DropdownMenuItem onClick={() => onDelete(props.row.original.name)} className='text-destructive'>
                 <Trash className='ml-2 h-4 w-4' />
                 حذف
               </DropdownMenuItem>
@@ -151,7 +153,6 @@ export const mockUsersData: TUser[] = [
     createdAt: '2026-07-20'
   }
 ];
-
 
 export const userStatusMapper = {
   active: {

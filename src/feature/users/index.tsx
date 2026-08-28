@@ -17,6 +17,7 @@ import EditUserForm from './components/edit-user-form';
 import {useAppDialog} from '@/store/dialog-store';
 import {PauseUserForm} from './components/pause-user';
 import type {TStatus} from './type';
+import {DeleteUserForm} from './components/delete-user';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();
@@ -73,6 +74,23 @@ const Users = () => {
       }
     });
   }
+  function onDelete(name: string) {
+    setDialog({
+      title: 'حذف المستخدم',
+      description: 'هذا الإجراء لا يمكن التراجع عنه.',
+      content: <DeleteUserForm name={name} />,
+      primaryAction: {
+        text: 'حذف المستخدم',
+        className: 'bg-destructive hover:bg-destructive/90',
+        onClick: () => {
+          // deleteUser.mutate(...)
+        }
+      },
+      secondaryAction: {
+        text: 'إلغاء'
+      }
+    });
+  }
   function onPause({name, status}: {name: string; status: TStatus}) {
     const statusInfo = userStatusMapper[status];
 
@@ -84,7 +102,7 @@ const Users = () => {
 
       primaryAction: {
         text: statusInfo.actionLabel,
-        className: status === 'active' ? 'bg-destructive text-white hover:bg-destructive/90' : '',
+        className: status === 'active' ? 'bg-destructive hover:bg-destructive/90' : '',
         onClick: () => {
           // status === active -> pause
           // status === inactive -> activate
@@ -97,7 +115,7 @@ const Users = () => {
     });
   }
 
-  const UsersColumns = GetUsersColumns({onUpdate, onPause});
+  const UsersColumns = GetUsersColumns({onUpdate, onPause, onDelete});
 
   return (
     <div className='flex flex-col gap-4 w-full'>
