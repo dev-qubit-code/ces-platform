@@ -11,6 +11,7 @@ import SelectField from '@/components/form/select-field';
 import type {TStatus, TUserType} from '../type';
 import {useAppSheet} from '@/store/sheet-store';
 import {useEffect} from 'react';
+import {useUpdateUser, useUserById} from '@/api/user';
 
 const UserSchema = z.object({
   name: z.string().min(3, {
@@ -20,18 +21,43 @@ const UserSchema = z.object({
   email: z.string().email({
     message: 'البريد الإلكتروني غير صحيح'
   }),
-  password: z.string().min(1, 'كلمة السر مطلوبة').min(8, 'كلمة السر يجب ان تكون اكثر من 8 احرف'),
+  password: z.string().refine(value => value === '' || value.length >= 8, {
+    message: 'كلمة السر يجب أن تكون 8 أحرف على الأقل'
+  }),
   role: z.enum<TUserType[]>(['admin', 'manager']),
   status: z.enum<TStatus[]>(['active', 'inactive'])
 });
 
-export type UserFormValues = z.infer<typeof UserSchema>;
+export type UpdateUserFormValues = z.infer<typeof UserSchema>;
 
 const EditUserForm = ({id, onClose}: {id: string; onClose: () => void}) => {
   const {sheet, setSheet} = useAppSheet();
-  console.log(id);
-  const isPending = false;
-  // TODO: get user id here ...
+  const {data: userData, isLoading} = useUserById(id, {select: data => data.data});
+  const {mutate: updateUserMutate, isPending} = useUpdateUser();
+
+  const form = useForm<UpdateUserFormValues>({
+    resolver: zodResolver(UserSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      role: 'manager',
+      status: 'active'
+    }
+  });
+
+  function onSubmit(values: UpdateUserFormValues) {
+    if (!isLoading)
+      updateUserMutate(
+        {id, data: values},
+        {
+          onSuccess: () => {
+            onClose();
+          }
+        }
+      );
+  }
+
   useEffect(() => {
     if (sheet)
       setSheet({
@@ -48,34 +74,20 @@ const EditUserForm = ({id, onClose}: {id: string; onClose: () => void}) => {
       });
   }, [isPending]);
 
-  const form = useForm<UserFormValues>({
-    resolver: zodResolver(UserSchema),
-
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      role: 'manager',
-      status: 'active'
-    }
-  });
-
-  function onSubmit(values: UserFormValues) {
-    console.log(values);
-    // Edit User Mutate
-    onClose();
-  }
-
+  useEffect(() => {
+    if (!isLoading && userData) form.setValues(userData);
+  }, [form, isLoading, userData]);
   return (
     <form id='create-user-form' onSubmit={form.handleSubmit(onSubmit)}>
       <FieldSet>
         <FieldGroup>
-          <InputField label='اسم المستخدم' control={form.control} register={form.register('name')} />
-          <InputField label='البريد الإلكتروني' control={form.control} register={form.register('email')} />
-          <InputField label='كلمة السر' control={form.control} register={form.register('password')} />
+          <InputField label='اسم المستخدم' props={{readOnly: isLoading}} control={form.control} register={form.register('name')} />
+          <InputField label='البريد الإلكتروني' props={{readOnly: isLoading}} control={form.control} register={form.register('email')} />
+          <InputField label='كلمة السر' props={{readOnly: isLoading}} control={form.control} register={form.register('password')} />
           <SelectField
             label='الصلاحية'
             control={form.control}
+            props={{readOnly: isLoading}}
             register={{
               name: 'role'
             }}
@@ -96,6 +108,7 @@ const EditUserForm = ({id, onClose}: {id: string; onClose: () => void}) => {
           <SelectField
             label='الحالة'
             control={form.control}
+            props={{readOnly: isLoading}}
             register={{
               name: 'status'
             }}

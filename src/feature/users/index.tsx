@@ -18,7 +18,7 @@ import {useAppDialog} from '@/store/dialog-store';
 import {PauseUserForm} from './components/pause-user';
 import type {TStatus} from './type';
 import {DeleteUserForm} from './components/delete-user';
-import {useDeleteUser} from '@/api/user/api';
+import {useDeleteUser} from '@/api/user';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();

@@ -83,7 +83,6 @@ export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsPr
     },
     {
       accessorKey: 'status',
-
       header: 'الحالة',
 
       cell: ({row}) => {
