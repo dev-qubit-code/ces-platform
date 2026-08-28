@@ -12,7 +12,7 @@ import {MoreHorizontal, Edit, Trash, StopCircleIcon} from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import type {VariantProps} from 'class-variance-authority';
-import {cn} from '@/lib/utils';
+import {cn, formatDate} from '@/lib/utils';
 
 export const UsersBreadcrumb: TBreadcrumb[] = [
   {
@@ -47,7 +47,7 @@ const userStatus: Record<TStatus, {name: string; variant: VariantProps<typeof ba
 interface GetUsersColumnsProps {
   onUpdate: (id: string) => void;
   onPause: ({name, status}: {name: string; status: TStatus}) => void;
-  onDelete: (name: string) => void;
+  onDelete: ({id, name}: {id: string; name: string}) => void;
 }
 
 export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsProps): ColumnDef<TUser>[] {
@@ -75,7 +75,11 @@ export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsPr
 
     {
       accessorKey: 'createdAt',
-      header: 'تاريخ الانضمام'
+      header: 'تاريخ الانضمام',
+      cell: props => {
+        const createAt = props.row.original.createdAt;
+        return formatDate(createAt, 'dd/MM/yyyy - hh:mm a');
+      }
     },
     {
       accessorKey: 'status',
@@ -122,7 +126,7 @@ export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsPr
                 {props.row.original.status == 'active' ? 'توقيف' : 'تفعيل'}
               </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={() => onDelete(props.row.original.name)} className='text-destructive'>
+              <DropdownMenuItem onClick={() => onDelete({id: props.row.original.id, name: props.row.original.name})} className='text-destructive'>
                 <Trash className='ml-2 h-4 w-4' />
                 حذف
               </DropdownMenuItem>
@@ -133,26 +137,6 @@ export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsPr
     }
   ];
 }
-
-export const mockUsersData: TUser[] = [
-  {
-    id: '1',
-    name: 'عبدالرحمن',
-    email: 'abdo@test.com',
-    role: 'admin',
-    status: 'active',
-    createdAt: '2026-08-01'
-  },
-
-  {
-    id: '2',
-    name: 'محمد',
-    email: 'mohamed@test.com',
-    role: 'manager',
-    status: 'inactive',
-    createdAt: '2026-07-20'
-  }
-];
 
 export const userStatusMapper = {
   active: {

@@ -8,8 +8,8 @@ import {useHeader} from './store/header-store';
 import {AppSheet} from './components/app-sheet';
 import {QueryClientProvider} from '@tanstack/react-query';
 import {queryClient} from './api/instance';
-import { Toaster } from './components/ui/toast';
-import { AppDialog } from './components/app-dialog';
+import {AppDialog} from './components/app-dialog';
+import {Toaster} from 'sonner';
 
 function App() {
   const breadcrumb = useHeader(state => state.breadcrumb);
@@ -26,7 +26,7 @@ function App() {
               </div>
               <AppSheet />
               <AppDialog />
-              <Toaster />
+              <Toaster dir='rtl' position='top-right' richColors />
               <footer className='absolute bottom-0 w-full border-t py-2 text-center text-sm text-muted-foreground'>جميع الحقوق محفوظة © {new Date().getFullYear()} جمعية الحاسوب</footer>
             </SidebarInset>
           </SidebarProvider>

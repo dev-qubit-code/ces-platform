@@ -8,9 +8,9 @@ import {useAppSheet} from '@/store/sheet-store';
 
 import AddUserForm from './components/add-user-form';
 
-import {UsersBreadcrumb, GetUsersColumns, mockUsersData, userStatusMapper} from './helper';
+import {UsersBreadcrumb, GetUsersColumns, userStatusMapper} from './helper';
 import {useUsers} from '@/api/user';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {usePagination} from '@/hooks/use-pagination';
 import {useDebounce} from '@/hooks/use-debounce';
 import EditUserForm from './components/edit-user-form';
@@ -18,23 +18,21 @@ import {useAppDialog} from '@/store/dialog-store';
 import {PauseUserForm} from './components/pause-user';
 import type {TStatus} from './type';
 import {DeleteUserForm} from './components/delete-user';
+import {useDeleteUser} from '@/api/user/api';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();
-  const {setDialog} = useAppDialog();
+  const {dialog, setDialog, onClose: onDialogClose} = useAppDialog();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
   const searchDebounce = useDebounce(search);
   const {data: response, isLoading} = useUsers({page, pageSize, search: searchDebounce}, {select: data => data.data, placeholderData: preData => preData});
+  const {mutate: deleteUserMutate, isPending: isDeleteUserPending} = useDeleteUser();
   const setBreadcrumb = useHeader(state => state.setBreadcrumb);
   const data = response?.items;
   const paginationProps = usePagination({pagination: response, setPage, setPageSize});
-  console.log('====================================');
-  console.log(response);
-  console.log('====================================');
   setBreadcrumb(UsersBreadcrumb);
-
   function onClick() {
     setSheet({
       title: 'إضافة مستخدم',
@@ -74,7 +72,24 @@ const Users = () => {
       }
     });
   }
-  function onDelete(name: string) {
+  // Delete User Action
+  useEffect(() => {
+    if (dialog)
+      setDialog({
+        ...dialog,
+        primaryAction: {
+          ...dialog.primaryAction!,
+          text: isDeleteUserPending ? 'جاري حذف المستخدم' : 'حذف المستخدم',
+          disabled: isDeleteUserPending
+        },
+        secondaryAction: {
+          ...dialog.secondaryAction!,
+          disabled: isDeleteUserPending
+        }
+      });
+  }, [isDeleteUserPending]);
+
+  function onDelete({id, name}: {id: string; name: string}) {
     setDialog({
       title: 'حذف المستخدم',
       description: 'هذا الإجراء لا يمكن التراجع عنه.',
@@ -83,10 +98,18 @@ const Users = () => {
         text: 'حذف المستخدم',
         className: 'bg-destructive hover:bg-destructive/90',
         onClick: () => {
-          // deleteUser.mutate(...)
+          deleteUserMutate(
+            {id},
+            {
+              onSuccess: () => {
+                onDialogClose();
+              }
+            }
+          );
         }
       },
       secondaryAction: {
+        disabled: isDeleteUserPending,
         text: 'إلغاء'
       }
     });
@@ -132,7 +155,7 @@ const Users = () => {
       </div>
 
       <div className='w-full'>
-        <DataTable columns={UsersColumns} data={mockUsersData} paginationProps={paginationProps} isLoading={false} SearchElement={<Input value={search} onChange={val => setSearch(val.target.value)} placeholder='ابحث عن مستخدم...' className='w-full max-w-sm' />} />
+        <DataTable columns={UsersColumns} data={data || []} paginationProps={paginationProps} isLoading={isLoading} SearchElement={<Input value={search} onChange={val => setSearch(val.target.value)} placeholder='ابحث عن مستخدم...' className='w-full max-w-sm' />} />
       </div>
     </div>
   );

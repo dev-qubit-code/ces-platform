@@ -8,7 +8,7 @@ import {FieldGroup, FieldSet} from '@/components/ui/field';
 
 import InputField from '@/components/form/input-field';
 import SelectField from '@/components/form/select-field';
-import type {TStatus, TUserType} from '../type';
+import type {TUserType} from '../type';
 import {useCreateUser} from '@/api/user';
 import {useAppSheet} from '@/store/sheet-store';
 import {useEffect} from 'react';
@@ -22,8 +22,7 @@ const UserSchema = z.object({
     message: 'البريد الإلكتروني غير صحيح'
   }),
   password: z.string().min(1, 'كلمة السر مطلوبة').min(8, 'كلمة السر يجب ان تكون اكثر من 8 احرف'),
-  role: z.enum<TUserType[]>(['admin', 'manager']),
-  status: z.enum<TStatus[]>(['active', 'inactive'])
+  role: z.enum<TUserType[]>(['admin', 'manager'])
 });
 
 export type UserFormValues = z.infer<typeof UserSchema>;
@@ -54,13 +53,11 @@ const AddUserForm = ({onClose}: {onClose: () => void}) => {
       name: '',
       email: '',
       password: '',
-      role: 'manager',
-      status: 'active'
+      role: 'manager'
     }
   });
 
   function onSubmit(values: UserFormValues) {
-    console.log(values);
     createUser(values, {
       onSuccess: () => {
         onClose();
@@ -93,26 +90,6 @@ const AddUserForm = ({onClose}: {onClose: () => void}) => {
                   value: 'admin'
                 }
               ] as {label: string; value: TUserType}[]
-            }
-          />
-          <SelectField
-            label='الحالة'
-            control={form.control}
-            register={{
-              name: 'status'
-            }}
-            placeholder='اختر الحالة'
-            options={
-              [
-                {
-                  label: 'مفعل',
-                  value: 'active'
-                },
-                {
-                  label: 'موقف',
-                  value: 'inactive'
-                }
-              ] as {label: string; value: TStatus}[]
             }
           />
         </FieldGroup>

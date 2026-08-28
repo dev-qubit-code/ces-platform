@@ -7,7 +7,7 @@ import type {TUser} from '@/feature/users/type';
 import type {TPaginationResponse} from '../type';
 import {USERS} from '../api-endpoint';
 import type {UserFormValues} from '@/feature/users/components/add-user-form';
-import {toast} from '@/components/ui/toast';
+import {toast} from 'sonner';
 export const USERS_KEY = (params?: TUsersParams) => ['USERS', params] as const;
 
 async function getAllUsers(params: TUsersParams) {
@@ -34,11 +34,33 @@ export function useCreateUser(option?: Omit<UseMutationOptions<AxiosResponse<TCr
     mutationFn: data => createUser(CreateUserDtoTransform(data)),
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: USERS_KEY()
+        queryKey: [USERS_KEY()[0]],
+        exact: false
       });
-      toast.add({
-        title: 'تم إنشاء المستخدم',
+      toast.success('تم إنشاء المستخدم', {
         description: 'تم إنشاء المستخدم بنجاح.'
+      });
+      option?.onSuccess?.(...args);
+    }
+  });
+}
+
+function deleteUser(id: string) {
+  return api.delete(`${VERSION_ONE}/${USERS}/${id}`);
+}
+
+export function useDeleteUser(option?: Omit<UseMutationOptions<AxiosResponse, Error, {id: string}>, 'mutationFn' | 'mutationKey'>) {
+  return useMutation<AxiosResponse, Error, {id: string}>({
+    ...option,
+    mutationKey: [...USERS_KEY(), 'delete'],
+    mutationFn: ({id}) => deleteUser(id),
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({
+        queryKey: [USERS_KEY()[0]],
+        exact: false
+      });
+      toast.success('تم حذف المستخدم', {
+        description: 'تم حذف المستخدم بنجاح.'
       });
       option?.onSuccess?.(...args);
     }
