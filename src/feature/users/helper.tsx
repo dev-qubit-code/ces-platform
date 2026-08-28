@@ -43,83 +43,88 @@ const userStatus: Record<TStatus, {name: string; variant: VariantProps<typeof ba
     variant: 'destructive'
   }
 };
+interface GetUsersColumnsProps {
+  onUpdate: (id: string) => void;
+}
 
-export const UsersColumns: ColumnDef<TUser>[] = [
-  {
-    accessorKey: 'name',
-    header: 'اسم المستخدم'
-  },
+export function GetUsersColumns({onUpdate}: GetUsersColumnsProps): ColumnDef<TUser>[] {
+  return [
+    {
+      accessorKey: 'name',
+      header: 'اسم المستخدم'
+    },
 
-  {
-    accessorKey: 'email',
-    header: 'البريد الإلكتروني'
-  },
+    {
+      accessorKey: 'email',
+      header: 'البريد الإلكتروني'
+    },
 
-  {
-    accessorKey: 'role',
-    header: 'الصلاحية',
+    {
+      accessorKey: 'role',
+      header: 'الصلاحية',
 
-    cell: ({row}) => {
-      const role = row.original.role;
-      const {name, variant} = userRoleStatus[role];
-      return <Badge variant={variant}>{name}</Badge>;
+      cell: ({row}) => {
+        const role = row.original.role;
+        const {name, variant} = userRoleStatus[role];
+        return <Badge variant={variant}>{name}</Badge>;
+      }
+    },
+
+    {
+      accessorKey: 'createdAt',
+      header: 'تاريخ الانضمام'
+    },
+    {
+      accessorKey: 'status',
+
+      header: 'الحالة',
+
+      cell: ({row}) => {
+        const status = row.original.status;
+        const {name, variant} = userStatus[status];
+        return <Badge variant={variant}>{name}</Badge>;
+      }
+    },
+    {
+      id: 'actions',
+
+      header: 'الإجراءات',
+
+      cell: props => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' size='icon'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => onUpdate(props.row.original.id)}>
+                <Edit className='ml-2 h-4 w-4' />
+                تعديل
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className='text-destructive'>
+                <StopCircleIcon className='ml-2 h-4 w-4' />
+                توقيف
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className='text-destructive'>
+                <Trash className='ml-2 h-4 w-4' />
+                حذف
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
     }
-  },
-
-  {
-    accessorKey: 'createdAt',
-    header: 'تاريخ الانضمام'
-  },
-  {
-    accessorKey: 'status',
-
-    header: 'الحالة',
-
-    cell: ({row}) => {
-      const status = row.original.status;
-      const {name, variant} = userStatus[status];
-      return <Badge variant={variant}>{name}</Badge>;
-    }
-  },
-  {
-    id: 'actions',
-
-    header: 'الإجراءات',
-
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant='ghost' size='icon'>
-            <MoreHorizontal className='h-4 w-4' />
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent dir='rtl' align='end'>
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem>
-              <Edit className='ml-2 h-4 w-4' />
-              تعديل
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className='text-destructive'>
-              <StopCircleIcon className='ml-2 h-4 w-4' />
-              توقيف
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className='text-destructive'>
-              <Trash className='ml-2 h-4 w-4' />
-              حذف
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
-];
+  ];
+}
 
 export const mockUsersData: TUser[] = [
   {

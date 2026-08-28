@@ -8,11 +8,12 @@ import {useAppSheet} from '@/store/sheet-store';
 
 import AddUserForm from './components/add-user-form';
 
-import {UsersBreadcrumb, UsersColumns} from './helper';
+import {UsersBreadcrumb, GetUsersColumns} from './helper';
 import {useUsers} from '@/api/user';
 import {useState} from 'react';
 import {usePagination} from '@/hooks/use-pagination';
 import {useDebounce} from '@/hooks/use-debounce';
+import EditUserForm from './components/edit-user-form';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();
@@ -48,6 +49,28 @@ const Users = () => {
       }
     });
   }
+
+  function onUpdate(id: string) {
+    setSheet({
+      title: 'تعديل المستخدم',
+
+      description: 'أدخل بيانات المستخدم ثم اضغط حفظ.',
+
+      content: <EditUserForm id={id} onClose={onClose} />,
+
+      primaryAction: {
+        text: 'تعديل',
+
+        formId: 'create-user-form'
+      },
+
+      secondaryAction: {
+        text: 'إلغاء'
+      }
+    });
+  }
+
+  const UsersColumns = GetUsersColumns({onUpdate});
 
   return (
     <div className='flex flex-col gap-4 w-full'>
