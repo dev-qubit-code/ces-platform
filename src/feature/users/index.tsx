@@ -8,15 +8,19 @@ import {useAppSheet} from '@/store/sheet-store';
 
 import AddUserForm from './components/add-user-form';
 
-import {UsersBreadcrumb, GetUsersColumns} from './helper';
+import {UsersBreadcrumb, GetUsersColumns, mockUsersData, userStatusMapper} from './helper';
 import {useUsers} from '@/api/user';
 import {useState} from 'react';
 import {usePagination} from '@/hooks/use-pagination';
 import {useDebounce} from '@/hooks/use-debounce';
 import EditUserForm from './components/edit-user-form';
+import {useAppDialog} from '@/store/dialog-store';
+import {PauseUserForm} from './components/pause-user';
+import type {TStatus} from './type';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();
+  const {setDialog} = useAppDialog();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
@@ -69,8 +73,31 @@ const Users = () => {
       }
     });
   }
+  function onPause({name, status}: {name: string; status: TStatus}) {
+    const statusInfo = userStatusMapper[status];
 
-  const UsersColumns = GetUsersColumns({onUpdate});
+    setDialog({
+      title: statusInfo.title,
+      description: statusInfo.description,
+
+      content: <PauseUserForm name={name} status={status} />,
+
+      primaryAction: {
+        text: statusInfo.actionLabel,
+        className: status === 'active' ? 'bg-destructive text-white hover:bg-destructive/90' : '',
+        onClick: () => {
+          // status === active -> pause
+          // status === inactive -> activate
+        }
+      },
+
+      secondaryAction: {
+        text: 'إلغاء'
+      }
+    });
+  }
+
+  const UsersColumns = GetUsersColumns({onUpdate, onPause});
 
   return (
     <div className='flex flex-col gap-4 w-full'>
@@ -87,7 +114,7 @@ const Users = () => {
       </div>
 
       <div className='w-full'>
-        <DataTable columns={UsersColumns} data={data || []} paginationProps={paginationProps} isLoading={isLoading} SearchElement={<Input value={search} onChange={val => setSearch(val.target.value)} placeholder='ابحث عن مستخدم...' className='w-full max-w-sm' />} />
+        <DataTable columns={UsersColumns} data={mockUsersData} paginationProps={paginationProps} isLoading={false} SearchElement={<Input value={search} onChange={val => setSearch(val.target.value)} placeholder='ابحث عن مستخدم...' className='w-full max-w-sm' />} />
       </div>
     </div>
   );

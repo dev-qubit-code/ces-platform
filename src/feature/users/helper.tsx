@@ -45,9 +45,10 @@ const userStatus: Record<TStatus, {name: string; variant: VariantProps<typeof ba
 };
 interface GetUsersColumnsProps {
   onUpdate: (id: string) => void;
+  onPause: ({name, status}: {name: string; status: TStatus}) => void;
 }
 
-export function GetUsersColumns({onUpdate}: GetUsersColumnsProps): ColumnDef<TUser>[] {
+export function GetUsersColumns({onUpdate, onPause}: GetUsersColumnsProps): ColumnDef<TUser>[] {
   return [
     {
       accessorKey: 'name',
@@ -109,7 +110,12 @@ export function GetUsersColumns({onUpdate}: GetUsersColumnsProps): ColumnDef<TUs
                 تعديل
               </DropdownMenuItem>
 
-              <DropdownMenuItem className='text-destructive'>
+              <DropdownMenuItem
+                onClick={() => {
+                  onPause({name: props.row.original.name, status: props.row.original.status});
+                }}
+                className='text-destructive'
+              >
                 <StopCircleIcon className='ml-2 h-4 w-4' />
                 توقيف
               </DropdownMenuItem>
@@ -145,3 +151,26 @@ export const mockUsersData: TUser[] = [
     createdAt: '2026-07-20'
   }
 ];
+
+
+export const userStatusMapper = {
+  active: {
+    label: 'مفعّل',
+    actionLabel: 'إيقاف المستخدم',
+    title: 'إيقاف المستخدم',
+    description: 'سيتم إيقاف الوصول إلى الحساب.',
+    messageTitle: 'هل تريد إيقاف هذا الحساب؟',
+    message: 'سيتم منع المستخدم من تسجيل الدخول والوصول إلى النظام. ويمكن إعادة تفعيل الحساب لاحقًا.',
+    badgeVariant: 'default' as const
+  },
+
+  inactive: {
+    label: 'موقوف',
+    actionLabel: 'تفعيل المستخدم',
+    title: 'تفعيل المستخدم',
+    description: 'سيتم إعادة تفعيل الوصول إلى الحساب.',
+    messageTitle: 'هل تريد تفعيل هذا الحساب؟',
+    message: 'سيتمكن المستخدم من تسجيل الدخول والوصول إلى النظام مرة أخرى.',
+    badgeVariant: 'secondary' as const
+  }
+} satisfies Record<TStatus, object>;

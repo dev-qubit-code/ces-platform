@@ -9,6 +9,7 @@ import {AppSheet} from './components/app-sheet';
 import {QueryClientProvider} from '@tanstack/react-query';
 import {queryClient} from './api/instance';
 import { Toaster } from './components/ui/toast';
+import { AppDialog } from './components/app-dialog';
 
 function App() {
   const breadcrumb = useHeader(state => state.breadcrumb);
@@ -24,6 +25,7 @@ function App() {
                 <Outlet />
               </div>
               <AppSheet />
+              <AppDialog />
               <Toaster />
               <footer className='absolute bottom-0 w-full border-t py-2 text-center text-sm text-muted-foreground'>جميع الحقوق محفوظة © {new Date().getFullYear()} جمعية الحاسوب</footer>
             </SidebarInset>
