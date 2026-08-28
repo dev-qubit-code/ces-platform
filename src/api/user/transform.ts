@@ -1,8 +1,10 @@
 import type {TUser} from '@/feature/users/type';
-import type {TUsersResponse} from './type';
+import type {TCreateUserBody, TUsersResponse} from './type';
 import {USER_ROLE, type UserRole} from '@/enum/user-role.enum';
+import type {UserFormValues} from '@/feature/users/components/add-user-form';
+import {RoleMap} from '../type';
 
-export function UserDtoTransform(data: TUsersResponse[]): TUser[] {
+export function UsersDtoTransform(data: TUsersResponse[]): TUser[] {
   return data.map(item => {
     return {
       id: item.id,
@@ -13,4 +15,13 @@ export function UserDtoTransform(data: TUsersResponse[]): TUser[] {
       createdAt: item.joinDate
     };
   });
+}
+
+export function CreateUserDtoTransform(data: UserFormValues): TCreateUserBody {
+  return {
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    role: RoleMap[data.role]
+  };
 }

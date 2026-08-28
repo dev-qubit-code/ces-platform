@@ -12,12 +12,15 @@ import {UsersBreadcrumb, UsersColumns} from './helper';
 import {useUsers} from '@/api/user';
 import {useState} from 'react';
 import {usePagination} from '@/hooks/use-pagination';
+import {useDebounce} from '@/hooks/use-debounce';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const {data: response, isLoading} = useUsers({page, pageSize}, {select: data => data.data});
+  const [search, setSearch] = useState('');
+  const searchDebounce = useDebounce(search);
+  const {data: response, isLoading} = useUsers({page, pageSize, search: searchDebounce}, {select: data => data.data, placeholderData: preData => preData});
   const setBreadcrumb = useHeader(state => state.setBreadcrumb);
   const data = response?.items;
   const paginationProps = usePagination({pagination: response, setPage, setPageSize});
@@ -61,7 +64,7 @@ const Users = () => {
       </div>
 
       <div className='w-full'>
-        <DataTable columns={UsersColumns} data={data || []} paginationProps={paginationProps} isLoading={isLoading} SearchElement={<Input placeholder='ابحث عن مستخدم...' className='w-full max-w-sm' />} />
+        <DataTable columns={UsersColumns} data={data || []} paginationProps={paginationProps} isLoading={isLoading} SearchElement={<Input value={search} onChange={val => setSearch(val.target.value)} placeholder='ابحث عن مستخدم...' className='w-full max-w-sm' />} />
       </div>
     </div>
   );

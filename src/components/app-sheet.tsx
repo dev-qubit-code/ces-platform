@@ -21,6 +21,7 @@ export function AppSheet() {
           {sheet?.primaryAction && (
             <Button
               type='submit'
+              disabled={sheet?.primaryAction.disabled}
               form={sheet.primaryAction.formId}
               className={cn(sheet.primaryAction.className)}
               onClick={() => {
@@ -32,6 +33,7 @@ export function AppSheet() {
           )}
           {sheet?.secondaryAction && (
             <SheetClose
+              disabled={sheet?.secondaryAction.disabled}
               render={
                 <Button
                   className={cn(sheet.secondaryAction?.className)}

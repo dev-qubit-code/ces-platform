@@ -5,6 +5,7 @@ type TAction = {
   formId?: string;
   className?: string;
   onClick?: () => void;
+  disabled?: boolean;
 };
 export type SheetProps = {
   title: string;

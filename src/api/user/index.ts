@@ -1,1 +1,1 @@
-export { USERS_KEY, useUsers } from './api';
+export {USERS_KEY, useUsers, useCreateUser} from './api';
