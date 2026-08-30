@@ -13,7 +13,9 @@ import {MoreHorizontal, Edit, Trash, StopCircleIcon} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import type {VariantProps} from 'class-variance-authority';
 import {cn, formatDate} from '@/lib/utils';
+import {IconHelpCircle} from '@tabler/icons-react';
 
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
 // eslint-disable-next-line react-refresh/only-export-components
 export const UsersBreadcrumb: TBreadcrumb[] = [
   {
@@ -84,11 +86,28 @@ export function GetUsersColumns({onUpdate, onUpdateStatus, onDelete}: GetUsersCo
     },
     {
       accessorKey: 'status',
-      header: 'الحالة',
+      header: () => (
+        <div className='flex items-center gap-1.5'>
+          <span>الحالة</span>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <IconHelpCircle size={16} className='text-muted-foreground' />
+              </TooltipTrigger>
+
+              <TooltipContent>
+                <p>توضح حالة المستخدم ما إذا كان يمكنه الدخول إلى المنصة أم لا.</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      ),
 
       cell: ({row}) => {
         const status = row.original.status;
         const {name, variant} = userStatus[status];
+
         return <Badge variant={variant}>{name}</Badge>;
       }
     },
