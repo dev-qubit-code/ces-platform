@@ -14,6 +14,7 @@ import {Button} from '@/components/ui/button';
 import type {VariantProps} from 'class-variance-authority';
 import {cn, formatDate} from '@/lib/utils';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const UsersBreadcrumb: TBreadcrumb[] = [
   {
     title: 'الرئيسية',
@@ -46,11 +47,11 @@ const userStatus: Record<TStatus, {name: string; variant: VariantProps<typeof ba
 };
 interface GetUsersColumnsProps {
   onUpdate: (id: string) => void;
-  onPause: ({name, status}: {name: string; status: TStatus}) => void;
+  onUpdateStatus: ({id, name, status}: {id: string; name: string; status: TStatus}) => void;
   onDelete: ({id, name}: {id: string; name: string}) => void;
 }
 
-export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsProps): ColumnDef<TUser>[] {
+export function GetUsersColumns({onUpdate, onUpdateStatus, onDelete}: GetUsersColumnsProps): ColumnDef<TUser>[] {
   return [
     {
       accessorKey: 'name',
@@ -117,7 +118,7 @@ export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsPr
 
               <DropdownMenuItem
                 onClick={() => {
-                  onPause({name: props.row.original.name, status: props.row.original.status});
+                  onUpdateStatus({id: props.row.original.id, name: props.row.original.name, status: props.row.original.status});
                 }}
                 className={cn(props.row.original.status == 'active' ? 'text-destructive' : 'text-primary')}
               >
@@ -137,6 +138,7 @@ export function GetUsersColumns({onUpdate, onPause, onDelete}: GetUsersColumnsPr
   ];
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const userStatusMapper = {
   active: {
     label: 'مفعّل',

@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({columns, data, SearchElement, isLoadin
           </TableBody>
         </Table>
       </div>
-      {paginationProps && <DataTablePagination {...paginationProps} />}{' '}
+      {paginationProps && <DataTablePagination {...paginationProps} />}
     </div>
   );
 }
