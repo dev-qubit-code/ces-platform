@@ -35,6 +35,10 @@ const Users = () => {
   const data = response?.items;
   const paginationProps = usePagination({pagination: response, setPage, setPageSize});
   setBreadcrumb(UsersBreadcrumb);
+  // To Change Page to 1 when user searching
+  useEffect(() => {
+    setPage(1);
+  }, [searchDebounce]);
 
   function onClick() {
     setSheet({
