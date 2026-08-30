@@ -21,7 +21,7 @@ function App() {
             <AppSidebar />
             <SidebarInset className='relative'>
               <Header breadcrumb={breadcrumb} />
-              <div className='container mx-auto p-4'>
+              <div className='container mx-auto p-4 mb-10'>
                 <Outlet />
               </div>
               <AppSheet />

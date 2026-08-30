@@ -47,3 +47,7 @@ export type TUpdateUserBody = {
   role: UserRole;
   isActive: boolean;
 };
+
+export type TUpdateUserStatusBody = {
+  isActive: boolean;
+};

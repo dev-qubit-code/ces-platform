@@ -7,15 +7,15 @@ export interface DataTablePaginationProps {
   page: number;
   pageSize: number;
   total: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  onPageChange: React.Dispatch<React.SetStateAction<number>>;
+  onPageSizeChange: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function DataTablePagination({page, pageSize, total, onPageChange, onPageSizeChange}: DataTablePaginationProps) {
   const pageCount = Math.ceil(total / pageSize);
 
   return (
-    <div className='flex items-center justify-between px-2'>
+    <div dir='ltr' className='flex items-center justify-between px-2'>
       <div className='text-sm text-muted-foreground'>{total} row(s)</div>
 
       <div className='flex items-center gap-6'>
@@ -52,7 +52,15 @@ export function DataTablePagination({page, pageSize, total, onPageChange, onPage
             <ChevronLeft />
           </Button>
 
-          <Button variant='outline' size='icon' className='size-8' onClick={() => onPageChange(page + 1)} disabled={page >= pageCount}>
+          <Button
+            variant='outline'
+            size='icon'
+            className='size-8'
+            onClick={() => {
+              onPageChange(page => page + 1);
+            }}
+            disabled={page >= pageCount}
+          >
             <span className='sr-only'>Go to next page</span>
             <ChevronRight />
           </Button>

@@ -19,6 +19,7 @@ import {PauseUserForm} from './components/pause-user';
 import type {TStatus} from './type';
 import {DeleteUserForm} from './components/delete-user';
 import {useDeleteUser} from '@/api/user';
+import {useUpdateUserStatus} from '@/api/user/api';
 
 const Users = () => {
   const {setSheet, onClose} = useAppSheet();
@@ -29,10 +30,16 @@ const Users = () => {
   const searchDebounce = useDebounce(search);
   const {data: response, isLoading} = useUsers({page, pageSize, search: searchDebounce}, {select: data => data.data, placeholderData: preData => preData});
   const {mutate: deleteUserMutate, isPending: isDeleteUserPending} = useDeleteUser();
+  const {mutate: updateUserStatus, isPending: isUpdateUserStatusPending} = useUpdateUserStatus();
   const setBreadcrumb = useHeader(state => state.setBreadcrumb);
   const data = response?.items;
   const paginationProps = usePagination({pagination: response, setPage, setPageSize});
   setBreadcrumb(UsersBreadcrumb);
+  // To Change Page to 1 when user searching
+  useEffect(() => {
+    setPage(1);
+  }, [searchDebounce]);
+
   function onClick() {
     setSheet({
       title: 'إضافة مستخدم',
@@ -52,7 +59,6 @@ const Users = () => {
       }
     });
   }
-
   function onUpdate(id: string) {
     setSheet({
       title: 'تعديل المستخدم',
@@ -87,6 +93,7 @@ const Users = () => {
           disabled: isDeleteUserPending
         }
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeleteUserPending]);
 
   function onDelete({id, name}: {id: string; name: string}) {
@@ -114,7 +121,26 @@ const Users = () => {
       }
     });
   }
-  function onPause({name, status}: {name: string; status: TStatus}) {
+  // onUpdateStatus Action
+  useEffect(() => {
+    if (!dialog || !dialog.primaryAction) return;
+
+    setDialog({
+      ...dialog,
+      primaryAction: {
+        ...dialog.primaryAction!,
+        text: isUpdateUserStatusPending ? 'جاري تحديث حالة المستخدم' : dialog.primaryAction.text,
+        disabled: isUpdateUserStatusPending
+      },
+      secondaryAction: {
+        ...dialog.secondaryAction!,
+        disabled: isUpdateUserStatusPending
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateUserStatusPending]);
+
+  function onUpdateStatus({id, name, status}: {id: string; name: string; status: TStatus}) {
     const statusInfo = userStatusMapper[status];
 
     setDialog({
@@ -127,8 +153,20 @@ const Users = () => {
         text: statusInfo.actionLabel,
         className: status === 'active' ? 'bg-destructive hover:bg-destructive/90' : '',
         onClick: () => {
-          // status === active -> pause
-          // status === inactive -> activate
+          updateUserStatus(
+            {
+              id,
+              data: {
+                // Active User when current Status is inActive
+                isActive: status !== 'active'
+              }
+            },
+            {
+              onSuccess: () => {
+                onDialogClose();
+              }
+            }
+          );
         }
       },
 
@@ -138,7 +176,7 @@ const Users = () => {
     });
   }
 
-  const UsersColumns = GetUsersColumns({onUpdate, onPause, onDelete});
+  const UsersColumns = GetUsersColumns({onUpdate, onUpdateStatus, onDelete});
 
   return (
     <div className='flex flex-col gap-4 w-full'>
