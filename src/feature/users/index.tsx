@@ -37,6 +37,7 @@ const Users = () => {
   setBreadcrumb(UsersBreadcrumb);
   // To Change Page to 1 when user searching
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
   }, [searchDebounce]);
 
