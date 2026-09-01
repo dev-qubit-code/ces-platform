@@ -78,7 +78,7 @@ const EditUserForm = ({id, onClose}: {id: string; onClose: () => void}) => {
     if (!isLoading && userData) form.setValues(userData);
   }, [form, isLoading, userData]);
   return (
-    <form id='create-user-form' onSubmit={form.handleSubmit(onSubmit)}>
+    <form id='update-user-form' onSubmit={form.handleSubmit(onSubmit)}>
       <FieldSet>
         <FieldGroup>
           <InputField label='اسم المستخدم' props={{readOnly: isLoading}} control={form.control} register={form.register('name')} />

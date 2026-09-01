@@ -71,7 +71,7 @@ const Users = () => {
       primaryAction: {
         text: 'تعديل',
 
-        formId: 'create-user-form'
+        formId: 'update-user-form'
       },
 
       secondaryAction: {
