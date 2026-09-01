@@ -1,7 +1,7 @@
 'use client';
 
 import {useState, type ReactNode} from 'react';
-import {flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnDef, type ColumnFiltersState, type SortingState, type VisibilityState} from '@tanstack/react-table';
+import {flexRender, getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable, type ColumnDef, type ColumnFiltersState, type SortingState, type VisibilityState} from '@tanstack/react-table';
 import {Settings2} from 'lucide-react';
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
@@ -29,7 +29,6 @@ export function DataTable<TData, TValue>({columns, data, SearchElement, isLoadin
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
