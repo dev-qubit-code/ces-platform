@@ -5,7 +5,7 @@ export function CoursesDtoTransform(data: TCourseResponse[]): TCourse[] {
   return data.map(course => ({
     id: course.id,
     name: course.name,
-    testsCount: course.testsCount,
-    filesCount: course.filesCount
+    testsCount: course.countOfNotes,
+    filesCount: course.countOfNotes
   }));
 }

@@ -1,1 +1,1 @@
-export {COURSES_KEY, useCourseById, useCourses, useCreateCourse, useDeleteCourse, useUpdateCourse} from './api';
+export {COURSES_KEY, useCreateCourse, useDeleteCourse, useCourseById, useCourses, useUpdateCourse} from './api';

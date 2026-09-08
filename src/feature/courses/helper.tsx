@@ -12,24 +12,30 @@ export const CoursesBreadcrumb: TBreadcrumb[] = [
     url: '/courses'
   }
 ];
-export const CourseColumns: ColumnDef<TCourse>[] = [
-  {
-    accessorKey: 'name',
-    header: 'اسم المادة'
-  },
-  {
-    accessorKey: 'testsCount',
-    header: 'عدد الاختبارات'
-  },
-  {
-    accessorKey: 'filesCount',
-    header: 'عدد الملازم'
-  },
-  {
-    id: 'actions',
-    header: 'الإجراءات',
-    cell: () => {
-      return (
+
+export type CourseColumnsProps = {
+  onUpdate: (id: string) => void;
+  onDelete: ({id, name}: {id: string; name: string}) => void;
+};
+
+export function CourseColumns({onUpdate, onDelete}: CourseColumnsProps): ColumnDef<TCourse>[] {
+  return [
+    {
+      accessorKey: 'name',
+      header: 'اسم المادة'
+    },
+    {
+      accessorKey: 'testsCount',
+      header: 'عدد الاختبارات'
+    },
+    {
+      accessorKey: 'filesCount',
+      header: 'عدد الملازم'
+    },
+    {
+      id: 'actions',
+      header: 'الإجراءات',
+      cell: props => (
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant='ghost' className='h-8 w-8 p-0'>
@@ -41,22 +47,28 @@ export const CourseColumns: ColumnDef<TCourse>[] = [
             <DropdownMenuGroup>
               <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Edit className='ml-2 h-4 w-4' /> تعديل
+
+              <DropdownMenuItem onClick={() => onUpdate(props.row.original.id)}>
+                <Edit className='ml-2 h-4 w-4' />
+                تعديل
               </DropdownMenuItem>
-              <DropdownMenuItem className='text-destructive'>
-                <Trash className='ml-2 h-4 w-4' /> حذف
+
+              <DropdownMenuItem
+                onClick={() =>
+                  onDelete({
+                    id: props.row.original.id,
+                    name: props.row.original.name
+                  })
+                }
+                className='text-destructive'
+              >
+                <Trash className='ml-2 h-4 w-4' />
+                حذف
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      );
+      )
     }
-  }
-];
-
-export const mockCourseData: TCourse[] = [
-  {id: '1', name: 'هندسة برمجيات', testsCount: 15, filesCount: 8},
-  {id: '2', name: 'قواعد بيانات 2', testsCount: 5, filesCount: 22},
-  {id: '3', name: 'تراكيب بيانات', testsCount: 12, filesCount: 10}
-];
+  ];
+}
