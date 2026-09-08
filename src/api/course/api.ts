@@ -10,35 +10,18 @@ import {COURSES} from '../api-endpoint';
 
 import type {TPaginationResponse} from '../type';
 
-import type {TCourseResponse, TCoursesParams, TCreateCourseBody, TCreateCourseResponse, TUpdateCourseBody} from './type';
-
-import {CoursesDtoTransform} from './transform';
-
+import type {TCourseByIdResponse, TCourseResponse, TCoursesParams, TCreateCourseBody, TCreateCourseResponse, TUpdateCourseBody} from './type';
 import type {TCourse} from '@/feature/courses/type';
-
-import {mockCourseData} from '@/feature/courses/helper';
-
-export const isMock = true;
+import {CoursesDtoTransform} from './transform';
 
 export const COURSES_KEY = (params?: TCoursesParams) => ['COURSES', params] as const;
 
+/* =========================
+   API Functions
+========================= */
+
 async function getAllCourses(params: TCoursesParams) {
-  if (isMock) {
-    return {
-      data: {
-        items: mockCourseData,
-        totalCount: mockCourseData.length,
-        currentPage: 1,
-        pageSize: mockCourseData.length,
-        totalPages: 1,
-        hasPreviousPage: false,
-        hasNextPage: false
-      }
-    } as AxiosResponse<TPaginationResponse<TCourse>>;
-  }
-
   const response = await api.get<TPaginationResponse<TCourseResponse>>(`${VERSION_ONE}/${COURSES}`, {params});
-
   return {
     ...response,
     data: {
@@ -49,7 +32,7 @@ async function getAllCourses(params: TCoursesParams) {
 }
 
 async function getCourseById(id: string) {
-  return api.get<TCourseResponse>(`${VERSION_ONE}/${COURSES}/${id}`);
+  return api.get<TCourseByIdResponse>(`${VERSION_ONE}/${COURSES}/${id}`);
 }
 
 function createCourse(body: TCreateCourseBody) {
@@ -64,6 +47,10 @@ function deleteCourse(id: string) {
   return api.delete(`${VERSION_ONE}/${COURSES}/${id}`);
 }
 
+/* =========================
+   Hooks
+========================= */
+
 export function useCourses<TData = AxiosResponse<TPaginationResponse<TCourse>>>(params: TCoursesParams, queryOption?: Omit<UseQueryOptions<AxiosResponse<TPaginationResponse<TCourse>>, Error, TData, ReturnType<typeof COURSES_KEY>>, 'queryKey' | 'queryFn'>) {
   return useQuery<AxiosResponse<TPaginationResponse<TCourse>>, Error, TData, ReturnType<typeof COURSES_KEY>>({
     ...queryOption,
@@ -72,8 +59,8 @@ export function useCourses<TData = AxiosResponse<TPaginationResponse<TCourse>>>(
   });
 }
 
-export function useCourseById<TData = AxiosResponse<TCourseResponse>>(id: string, queryOption?: Omit<UseQueryOptions<AxiosResponse<TCourseResponse>, Error, TData>, 'queryKey' | 'queryFn'>) {
-  return useQuery<AxiosResponse<TCourseResponse>, Error, TData>({
+export function useCourseById<TData = AxiosResponse<TCourseByIdResponse>>(id: string, queryOption?: Omit<UseQueryOptions<AxiosResponse<TCourseByIdResponse>, Error, TData>, 'queryKey' | 'queryFn'>) {
+  return useQuery<AxiosResponse<TCourseByIdResponse>, Error, TData>({
     ...queryOption,
     queryKey: [COURSES_KEY()[0], id],
     queryFn: () => getCourseById(id)
@@ -91,8 +78,8 @@ export function useCreateCourse(option?: Omit<UseMutationOptions<AxiosResponse<T
         exact: false
       });
 
-      toast.success('تم إنشاء المادة', {
-        description: 'تم إنشاء المادة بنجاح.'
+      toast.success('تم إنشاء المقرر', {
+        description: 'تم إنشاء المقرر بنجاح.'
       });
 
       option?.onSuccess?.(...args);
@@ -113,7 +100,14 @@ export function useUpdateCourse(
     'mutationFn' | 'mutationKey'
   >
 ) {
-  return useMutation<AxiosResponse, Error, {id: string; data: TUpdateCourseBody}>({
+  return useMutation<
+    AxiosResponse,
+    Error,
+    {
+      id: string;
+      data: TUpdateCourseBody;
+    }
+  >({
     ...option,
     mutationKey: [...COURSES_KEY(), 'update'],
     mutationFn: ({id, data}) => updateCourse({id, data}),
@@ -122,11 +116,9 @@ export function useUpdateCourse(
         queryKey: [COURSES_KEY()[0]],
         exact: false
       });
-
-      toast.success('تم تعديل المادة', {
-        description: 'تم تعديل بيانات المادة بنجاح.'
+      toast.success('تم تعديل المقرر', {
+        description: 'تم تعديل بيانات المقرر بنجاح.'
       });
-
       option?.onSuccess?.(...args);
     }
   });
@@ -143,8 +135,8 @@ export function useDeleteCourse(option?: Omit<UseMutationOptions<AxiosResponse, 
         exact: false
       });
 
-      toast.success('تم حذف المادة', {
-        description: 'تم حذف المادة بنجاح.'
+      toast.success('تم حذف المقرر', {
+        description: 'تم حذف المقرر بنجاح.'
       });
 
       option?.onSuccess?.(...args);

@@ -1,8 +1,14 @@
+export type TCoursesParams = {
+  search?: string;
+  page: number;
+  pageSize: number;
+};
+
 export type TCourseResponse = {
   id: string;
   name: string;
-  testsCount: number;
-  filesCount: number;
+  countOfTests: number;
+  countOfNotes: number;
 };
 
 export type TCreateCourseBody = {
@@ -11,14 +17,8 @@ export type TCreateCourseBody = {
 
 export type TCreateCourseResponse = TCourseResponse;
 
-export type TCourseByIdResponse = TCourseResponse;
-
 export type TUpdateCourseBody = {
   name: string;
 };
 
-export type TCoursesParams = {
-  page: number;
-  pageSize: number;
-  search?: string;
-};
+export type TCourseByIdResponse = TCourseResponse;
