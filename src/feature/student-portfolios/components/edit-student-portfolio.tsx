@@ -9,6 +9,9 @@ import InputField from '@/components/form/input-field';
 
 import {Plus, Trash} from 'lucide-react';
 import type {TStudentPortfolio} from '../type';
+import {useUpdateStudentInfo} from '@/api/student-infos';
+import {useEffect} from 'react';
+import {useAppSheet} from '@/store/sheet-store';
 
 const StudentPortfolioSchema = z.object({
   studentName: z.string().min(3),
@@ -31,9 +34,11 @@ const StudentPortfolioSchema = z.object({
   )
 });
 
-type StudentPortfolioFormValues = z.infer<typeof StudentPortfolioSchema>;
+export type StudentPortfolioFormValues = z.infer<typeof StudentPortfolioSchema>;
 
 const EditStudentPortfolioForm = ({student, onClose}: {student: TStudentPortfolio; onClose: () => void}) => {
+  const {sheet, setSheet} = useAppSheet();
+  const {mutate: updateStudent, isPending: isUpdateStudentPending} = useUpdateStudentInfo({onSuccess: () => onClose()});
   const form = useForm<StudentPortfolioFormValues>({
     resolver: zodResolver(StudentPortfolioSchema),
 
@@ -60,9 +65,14 @@ const EditStudentPortfolioForm = ({student, onClose}: {student: TStudentPortfoli
 
   function onSubmit(values: StudentPortfolioFormValues) {
     console.log(values);
-
-    onClose();
+    updateStudent({id: student.id, data: values});
   }
+
+  useEffect(() => {
+    if (sheet) {
+      setSheet({...sheet, primaryAction: {...sheet.primaryAction!, disabled: isUpdateStudentPending, text: isUpdateStudentPending ? 'جاري التعديل' : 'تعديل'}, secondaryAction: {...sheet.secondaryAction!, disabled: isUpdateStudentPending}});
+    }
+  }, [isUpdateStudentPending]);
 
   return (
     <form id='update-student-portfolio-form' onSubmit={form.handleSubmit(onSubmit)}>

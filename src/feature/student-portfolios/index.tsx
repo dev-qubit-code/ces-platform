@@ -2,15 +2,30 @@ import {DataTable} from '@/components/app-table';
 import {Input} from '@/components/ui/input';
 import {useHeader} from '@/store/header-store';
 
-import {StudentPortfoliosBreadcrumb, StudentPortfoliosColumns, mockStudentPortfoliosData} from './helper';
+import {StudentPortfoliosBreadcrumb, StudentPortfoliosColumns} from './helper';
 import ViewStudentPortfolioForm from './components/view-student-portfolio';
 import {useAppSheet} from '@/store/sheet-store';
 import type {TStudentPortfolio} from './type';
 import EditStudentPortfolioForm from './components/edit-student-portfolio';
+import {useStudentInfos} from '@/api/student-infos';
+import {useState} from 'react';
+import {useDebounce} from '@/hooks/use-debounce';
+import {usePagination} from '@/hooks/use-pagination';
 
 const StudentPortfolios = () => {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search);
   const {setSheet, onClose} = useAppSheet();
   const setBreadcrumb = useHeader(state => state.setBreadcrumb);
+  const {data: response, isLoading} = useStudentInfos({page, pageSize, search: debouncedSearch}, {select: res => res.data});
+  const paginationProps = usePagination({
+    pagination: response,
+    setPage,
+    setPageSize
+  });
+  const data = response?.items || [];
   setBreadcrumb(StudentPortfoliosBreadcrumb);
   function onView(student: TStudentPortfolio) {
     setSheet({
@@ -55,7 +70,7 @@ const StudentPortfolios = () => {
       </div>
 
       <div className='w-full'>
-        <DataTable columns={columns} data={mockStudentPortfoliosData} SearchElement={<Input placeholder='ابحث عن عمل طالب...' className='w-full max-w-sm' />} />
+        <DataTable columns={columns} data={data} paginationProps={paginationProps} isLoading={isLoading} SearchElement={<Input value={search} onChange={e => setSearch(e.target.value)} placeholder='ابحث عن عمل طالب...' className='w-full max-w-sm' />} />
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import type { StudentPortfolioFormValues } from '@/feature/student-portfolios/components/edit-student-portfolio';
 import type {TPaginationResponse} from '../type';
 
 export type TStudentInfosParams = {
@@ -8,7 +9,7 @@ export type TStudentInfosParams = {
 
 export type TUpdateStudentInfoParams = {
   id: string;
-  data: TUpdateStudentInfoBody;
+  data: StudentPortfolioFormValues;
 };
 
 export type TStudentInfoSkillResponse = {
@@ -29,6 +30,7 @@ export type TStudentInfoResponse = {
   major: string;
   skills: TStudentInfoSkillResponse[];
   sources: TStudentInfoSourceResponse[];
+  createdAtUtc: string;
 };
 
 export type TCreateStudentInfoBody = {

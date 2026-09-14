@@ -7,6 +7,7 @@ import {FieldGroup, FieldSet} from '@/components/ui/field';
 import InputField from '@/components/form/input-field';
 
 import type {TStudentPortfolio} from '../type';
+import TextareaField from '@/components/form/textarea-field';
 
 const StudentPortfolioSchema = z.object({
   studentName: z.string().min(3),
@@ -64,7 +65,7 @@ const ViewStudentPortfolioForm = ({student}: {student: TStudentPortfolio}) => {
 
           <InputField label='التخصص' control={form.control} props={{readOnly: true}} register={form.register('specialization')} />
 
-          <InputField label='النبذة' control={form.control} props={{readOnly: true}} register={form.register('description')} />
+          <TextareaField label='النبذة' control={form.control} props={{readOnly: true}} register={form.register('description')} />
 
           {/* Technologies */}
 
