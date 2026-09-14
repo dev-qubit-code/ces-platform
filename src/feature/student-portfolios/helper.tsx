@@ -11,6 +11,8 @@ import {Edit, Eye, MoreHorizontal, Trash} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import TechnologyList from '@/components/shared/technology-list';
 import LinksList from '@/components/shared/links-list';
+import {formatDate} from '@/lib/utils';
+import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 
 export const StudentPortfoliosBreadcrumb: TBreadcrumb[] = [
   {
@@ -26,8 +28,9 @@ export const StudentPortfoliosBreadcrumb: TBreadcrumb[] = [
 interface StudentPortfoliosColumnsProps {
   onView: (student: TStudentPortfolio) => void;
   onEdit: (student: TStudentPortfolio) => void;
+  onDelete: (student: TStudentPortfolio) => void;
 }
-export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColumnsProps): ColumnDef<TStudentPortfolio>[] {
+export function StudentPortfoliosColumns({onView, onEdit, onDelete}: StudentPortfoliosColumnsProps): ColumnDef<TStudentPortfolio>[] {
   return [
     {
       accessorKey: 'studentName',
@@ -40,9 +43,17 @@ export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColu
     {
       accessorKey: 'description',
       header: 'نبذة عنه',
-      cell: ({row}) => <p className='max-w-xs truncate'>{row.original.description}</p>
+      cell: ({row}) => (
+        <Tooltip>
+          <TooltipTrigger>
+            <p className='max-w-xs truncate cursor-default'>{row.original.description}</p>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className='max-w-md'>{row.original.description}</p>
+          </TooltipContent>
+        </Tooltip>
+      )
     },
-
     {
       accessorKey: 'technologies',
       header: 'التقنيات',
@@ -58,7 +69,11 @@ export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColu
 
     {
       accessorKey: 'createdAt',
-      header: 'تاريخ الإضافة'
+      header: 'تاريخ الإضافة',
+      cell: ({row}) => {
+        const createdAt = row.original.createdAt;
+        return formatDate(createdAt);
+      }
     },
 
     {
@@ -93,7 +108,7 @@ export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColu
                   تعديل
                 </DropdownMenuItem>
 
-                <DropdownMenuItem className='text-destructive'>
+                <DropdownMenuItem className='text-destructive' onClick={() => onDelete(student)}>
                   <Trash className='ml-2 h-4 w-4' />
                   حذف
                 </DropdownMenuItem>
@@ -105,80 +120,3 @@ export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColu
     }
   ];
 }
-
-export const mockStudentPortfoliosData: TStudentPortfolio[] = [
-  {
-    id: '1',
-
-    studentName: 'عبدالرحمن منير',
-
-    specialization: 'هندسة حاسوب',
-
-    description: 'طالب هندسة حاسوب مهتم بتطوير تطبيقات الويب وبناء الأنظمة الحديثة.',
-
-    technologies: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Prisma', 'PostgreSQL'],
-
-    links: [
-      {
-        key: 'github',
-        value: 'https://github.com/abdo'
-      },
-      {
-        key: 'live',
-        value: 'https://portfolio.com'
-      },
-      {
-        key: 'linkedin',
-        value: 'https://linkedin.com'
-      }
-    ],
-
-    createdAt: '2026-08-05'
-  },
-
-  {
-    id: '2',
-
-    studentName: 'محمد أحمد',
-
-    specialization: 'تقنية معلومات',
-
-    description: 'مطور واجهات أمامية يهتم بتجربة المستخدم وتصميم التطبيقات الحديثة.',
-
-    technologies: ['React', 'JavaScript', 'Tailwind CSS', 'Figma'],
-
-    links: [
-      {
-        key: 'github',
-        value: 'https://github.com/mohamed'
-      }
-    ],
-
-    createdAt: '2026-07-28'
-  },
-
-  {
-    id: '3',
-
-    studentName: 'سارة خالد',
-
-    specialization: 'علوم حاسوب',
-
-    description: 'مهتمة بتطوير تطبيقات الموبايل والذكاء الاصطناعي.',
-
-    technologies: ['Flutter', 'Dart', 'Firebase', 'Python'],
-
-    links: [
-      {
-        key: 'github',
-        value: 'https://github.com/sara'
-      },
-      {
-        key: 'demo',
-        value: 'https://demo.com'
-      }
-    ],
-
-    createdAt: '2026-07-20'
-  }
-];
