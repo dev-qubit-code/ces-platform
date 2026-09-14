@@ -12,6 +12,7 @@ import {Button} from '@/components/ui/button';
 import TechnologyList from '@/components/shared/technology-list';
 import LinksList from '@/components/shared/links-list';
 import {formatDate} from '@/lib/utils';
+import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 
 export const StudentPortfoliosBreadcrumb: TBreadcrumb[] = [
   {
@@ -27,8 +28,9 @@ export const StudentPortfoliosBreadcrumb: TBreadcrumb[] = [
 interface StudentPortfoliosColumnsProps {
   onView: (student: TStudentPortfolio) => void;
   onEdit: (student: TStudentPortfolio) => void;
+  onDelete: (student: TStudentPortfolio) => void;
 }
-export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColumnsProps): ColumnDef<TStudentPortfolio>[] {
+export function StudentPortfoliosColumns({onView, onEdit, onDelete}: StudentPortfoliosColumnsProps): ColumnDef<TStudentPortfolio>[] {
   return [
     {
       accessorKey: 'studentName',
@@ -41,9 +43,17 @@ export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColu
     {
       accessorKey: 'description',
       header: 'نبذة عنه',
-      cell: ({row}) => <p className='max-w-xs truncate'>{row.original.description}</p>
+      cell: ({row}) => (
+        <Tooltip>
+          <TooltipTrigger>
+            <p className='max-w-xs truncate cursor-default'>{row.original.description}</p>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className='max-w-md'>{row.original.description}</p>
+          </TooltipContent>
+        </Tooltip>
+      )
     },
-
     {
       accessorKey: 'technologies',
       header: 'التقنيات',
@@ -98,7 +108,7 @@ export function StudentPortfoliosColumns({onView, onEdit}: StudentPortfoliosColu
                   تعديل
                 </DropdownMenuItem>
 
-                <DropdownMenuItem className='text-destructive'>
+                <DropdownMenuItem className='text-destructive' onClick={() => onDelete(student)}>
                   <Trash className='ml-2 h-4 w-4' />
                   حذف
                 </DropdownMenuItem>
