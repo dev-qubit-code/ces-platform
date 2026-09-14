@@ -2,3 +2,4 @@ export const USERS = 'users';
 export const ACTIVATION = 'activation';
 export const TEACHERS = 'teachers';
 export const COURSES = 'courses';
+export const STUDENT_INFOS = 'students-infos';
