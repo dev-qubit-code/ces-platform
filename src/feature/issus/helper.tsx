@@ -120,37 +120,3 @@ export const IssuesColumns: ColumnDef<TIssue>[] = [
   }
 ];
 
-export const mockIssuesData: TIssue[] = [
-  {
-    id: '1',
-    title: 'مشكلة في رفع الملف',
-
-    description: 'لا أستطيع رفع ملف PDF الخاص بالمادة.',
-
-    priority: 'high',
-
-    createdAt: '2026-08-01'
-  },
-
-  {
-    id: '2',
-    title: 'خطأ في بيانات المادة',
-
-    description: 'بيانات المادة لا تظهر بشكل صحيح.',
-
-    priority: 'medium',
-
-    createdAt: '2026-07-28'
-  },
-
-  {
-    id: '3',
-    title: 'مشكلة تسجيل الدخول',
-
-    description: 'لا أستطيع الدخول إلى الحساب.',
-
-    priority: 'urgent',
-
-    createdAt: '2026-07-20'
-  }
-];

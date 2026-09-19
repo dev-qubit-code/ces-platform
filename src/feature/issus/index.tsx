@@ -3,11 +3,27 @@ import {Input} from '@/components/ui/input';
 
 import {useHeader} from '@/store/header-store';
 
-import {IssuesBreadcrumb, IssuesColumns, mockIssuesData} from './helper';
+import {IssuesBreadcrumb, IssuesColumns} from './helper';
+import {useReports} from '@/api/issus';
+import {usePagination} from '@/hooks/use-pagination';
+import {useState} from 'react';
+import {useDebounce} from '@/hooks/use-debounce';
 
 const Issues = () => {
-  const setBreadcrumb = useHeader(state => state.setBreadcrumb);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState('');
 
+  const searchDebounce = useDebounce(search);
+
+  const setBreadcrumb = useHeader(state => state.setBreadcrumb);
+  const {data: res, isLoading} = useReports({page, pageSize, search: searchDebounce}, {select: res => res.data, placeholderData: preData => preData});
+  const data = res?.items || [];
+  const paginationProps = usePagination({
+    pagination: res,
+    setPage,
+    setPageSize
+  });
   setBreadcrumb(IssuesBreadcrumb);
 
   return (
@@ -19,7 +35,7 @@ const Issues = () => {
       </div>
 
       <div className='w-full'>
-        <DataTable columns={IssuesColumns} data={mockIssuesData} SearchElement={<Input placeholder='ابحث عن شكوى...' className='w-full max-w-sm' />} />
+        <DataTable columns={IssuesColumns} data={data} isLoading={isLoading} paginationProps={paginationProps} SearchElement={<Input value={search} onChange={event => setSearch(event.target.value)} placeholder='ابحث عن شكوى...' className='w-full max-w-sm' />} />
       </div>
     </div>
   );
