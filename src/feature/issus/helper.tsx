@@ -8,7 +8,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, 
 
 import {Badge} from '@/components/ui/badge';
 
-import {MoreHorizontal, Eye, Trash} from 'lucide-react';
+import {MoreHorizontal, Eye} from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 
@@ -27,6 +27,7 @@ import type {VariantProps} from 'class-variance-authority';
 import {badgeVariants} from '@/components/ui/badge';
 
 import type {TIssuePriority} from './type';
+import {formatDate} from '@/lib/utils';
 
 export const issuePriority: Record<
   TIssuePriority,
@@ -56,101 +57,71 @@ export const issuePriority: Record<
   }
 };
 
-export const IssuesColumns: ColumnDef<TIssue>[] = [
-  {
-    accessorKey: 'title',
-    header: 'نص الشكوى'
-  },
+interface GetIssuesColumnsProps {
+  onView: (id: string) => void;
+}
 
-  {
-    accessorKey: 'description',
-    header: 'وصف الشكوى',
+export function GetIssuesColumns({onView}: GetIssuesColumnsProps): ColumnDef<TIssue>[] {
+  return [
+    {
+      accessorKey: 'title',
+      header: 'نص الشكوى'
+    },
 
-    cell: ({row}) => <p className='max-w-75 truncate'>{row.original.description}</p>
-  },
-  {
-    accessorKey: 'priority',
+    {
+      accessorKey: 'description',
+      header: 'وصف الشكوى',
 
-    header: 'الأولوية',
+      cell: ({row}) => <p className='max-w-75 truncate'>{row.original.description}</p>
+    },
+    {
+      accessorKey: 'priority',
 
-    cell: ({row}) => {
-      const priority = issuePriority[row.original.priority];
+      header: 'الأولوية',
 
-      return <Badge variant={priority.variant}>{priority.name}</Badge>;
+      cell: ({row}) => {
+        const priority = issuePriority[row.original.priority];
+
+        return <Badge variant={priority.variant}>{priority.name}</Badge>;
+      }
+    },
+
+    {
+      accessorKey: 'createdAt',
+      header: 'تاريخ الإضافة',
+      cell: ({row}) => {
+        const createdAt = row.original.createdAt;
+        return formatDate(createdAt);
+      }
+    },
+
+    {
+      id: 'actions',
+
+      header: 'الإجراءات',
+
+      cell: ({row}) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' size='icon'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => onView(row.original.id)}>
+                <Eye className='ml-2 h-4 w-4' />
+                عرض
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
     }
-  },
-
-  {
-    accessorKey: 'createdAt',
-    header: 'تاريخ الإضافة'
-  },
-
-  {
-    id: 'actions',
-
-    header: 'الإجراءات',
-
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant='ghost' size='icon'>
-            <MoreHorizontal className='h-4 w-4' />
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent dir='rtl' align='end'>
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem>
-              <Eye className='ml-2 h-4 w-4' />
-              عرض
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className='text-destructive'>
-              <Trash className='ml-2 h-4 w-4' />
-              حذف
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
-];
-
-export const mockIssuesData: TIssue[] = [
-  {
-    id: '1',
-    title: 'مشكلة في رفع الملف',
-
-    description: 'لا أستطيع رفع ملف PDF الخاص بالمادة.',
-
-    priority: 'high',
-
-    createdAt: '2026-08-01'
-  },
-
-  {
-    id: '2',
-    title: 'خطأ في بيانات المادة',
-
-    description: 'بيانات المادة لا تظهر بشكل صحيح.',
-
-    priority: 'medium',
-
-    createdAt: '2026-07-28'
-  },
-
-  {
-    id: '3',
-    title: 'مشكلة تسجيل الدخول',
-
-    description: 'لا أستطيع الدخول إلى الحساب.',
-
-    priority: 'urgent',
-
-    createdAt: '2026-07-20'
-  }
-];
+  ];
+}

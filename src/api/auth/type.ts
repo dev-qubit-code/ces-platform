@@ -1,4 +1,6 @@
-export type TUserRole = 0 | 1;
+import type {USER_ROLE} from '@/enum/user-role.enum';
+
+export type TUserRole = keyof typeof USER_ROLE;
 export type TLoginBody = {
   email: string;
   password: string;
