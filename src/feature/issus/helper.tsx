@@ -27,6 +27,7 @@ import type {VariantProps} from 'class-variance-authority';
 import {badgeVariants} from '@/components/ui/badge';
 
 import type {TIssuePriority} from './type';
+import {formatDate} from '@/lib/utils';
 
 export const issuePriority: Record<
   TIssuePriority,
@@ -82,7 +83,11 @@ export const IssuesColumns: ColumnDef<TIssue>[] = [
 
   {
     accessorKey: 'createdAt',
-    header: 'تاريخ الإضافة'
+    header: 'تاريخ الإضافة',
+    cell: ({row}) => {
+      const createdAt = row.original.createdAt;
+      return formatDate(createdAt);
+    }
   },
 
   {
@@ -119,4 +124,3 @@ export const IssuesColumns: ColumnDef<TIssue>[] = [
     )
   }
 ];
-

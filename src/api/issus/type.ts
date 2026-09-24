@@ -1,16 +1,17 @@
-import type {TPaginationResponse} from '../type';
-
-/* Backend */
-
+import type {ISSUE_PRIORITY} from '@/enum/issus-priority.enum';
+export type TIssuePriority = keyof typeof ISSUE_PRIORITY;
 export type TReportResponse = {
   id: string;
   title: string;
   description: string;
+  priority: TIssuePriority;
+  createdAtUtc: string;
 };
 
 export type TCreateReportBody = {
   title: string;
   description: string;
+  priority: TIssuePriority;
 };
 
 export type TReportsParams = {
@@ -19,4 +20,4 @@ export type TReportsParams = {
   pageSize: number;
 };
 
-export type TReportsResponse = TPaginationResponse<TReportResponse>;
+export type TReportsResponse = TReportResponse[];
