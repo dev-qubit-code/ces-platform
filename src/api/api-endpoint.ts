@@ -3,3 +3,5 @@ export const ACTIVATION = 'activation';
 export const TEACHERS = 'teachers';
 export const COURSES = 'courses';
 export const STUDENT_INFOS = 'students-infos';
+export const REPORTS = 'reports';
+export const AUTH = 'auth';
