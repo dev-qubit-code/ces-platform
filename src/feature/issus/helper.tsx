@@ -8,7 +8,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, 
 
 import {Badge} from '@/components/ui/badge';
 
-import {MoreHorizontal, Eye, Trash} from 'lucide-react';
+import {MoreHorizontal, Eye} from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 
@@ -57,70 +57,71 @@ export const issuePriority: Record<
   }
 };
 
-export const IssuesColumns: ColumnDef<TIssue>[] = [
-  {
-    accessorKey: 'title',
-    header: 'نص الشكوى'
-  },
+interface GetIssuesColumnsProps {
+  onView: (id: string) => void;
+}
 
-  {
-    accessorKey: 'description',
-    header: 'وصف الشكوى',
+export function GetIssuesColumns({onView}: GetIssuesColumnsProps): ColumnDef<TIssue>[] {
+  return [
+    {
+      accessorKey: 'title',
+      header: 'نص الشكوى'
+    },
 
-    cell: ({row}) => <p className='max-w-75 truncate'>{row.original.description}</p>
-  },
-  {
-    accessorKey: 'priority',
+    {
+      accessorKey: 'description',
+      header: 'وصف الشكوى',
 
-    header: 'الأولوية',
+      cell: ({row}) => <p className='max-w-75 truncate'>{row.original.description}</p>
+    },
+    {
+      accessorKey: 'priority',
 
-    cell: ({row}) => {
-      const priority = issuePriority[row.original.priority];
+      header: 'الأولوية',
 
-      return <Badge variant={priority.variant}>{priority.name}</Badge>;
+      cell: ({row}) => {
+        const priority = issuePriority[row.original.priority];
+
+        return <Badge variant={priority.variant}>{priority.name}</Badge>;
+      }
+    },
+
+    {
+      accessorKey: 'createdAt',
+      header: 'تاريخ الإضافة',
+      cell: ({row}) => {
+        const createdAt = row.original.createdAt;
+        return formatDate(createdAt);
+      }
+    },
+
+    {
+      id: 'actions',
+
+      header: 'الإجراءات',
+
+      cell: ({row}) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' size='icon'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => onView(row.original.id)}>
+                <Eye className='ml-2 h-4 w-4' />
+                عرض
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
     }
-  },
-
-  {
-    accessorKey: 'createdAt',
-    header: 'تاريخ الإضافة',
-    cell: ({row}) => {
-      const createdAt = row.original.createdAt;
-      return formatDate(createdAt);
-    }
-  },
-
-  {
-    id: 'actions',
-
-    header: 'الإجراءات',
-
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant='ghost' size='icon'>
-            <MoreHorizontal className='h-4 w-4' />
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent dir='rtl' align='end'>
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem>
-              <Eye className='ml-2 h-4 w-4' />
-              عرض
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className='text-destructive'>
-              <Trash className='ml-2 h-4 w-4' />
-              حذف
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
-];
+  ];
+}
