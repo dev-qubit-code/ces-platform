@@ -6,7 +6,7 @@ import InputField from '@/components/form/input-field';
 import SelectField from '@/components/form/select-field';
 import {useAppSheet} from '@/store/sheet-store';
 import {useEffect} from 'react';
-import {useCreateNote} from '@/api/notes/api';
+import {useNoteById, useUpdateNote} from '@/api/notes/api';
 import {useTeachers} from '@/api/teacher/api';
 import {useCourses} from '@/api/course/api';
 const MemoirSchema = z.object({
@@ -23,13 +23,15 @@ const MemoirSchema = z.object({
     message: 'التاريخ مطلوب'
   })
 });
-export type MemoirFormValues = z.infer<typeof MemoirSchema>;
-
-const AddMemoirForm = ({onClose}: {onClose: () => void}) => {
+type MemoirFormValues = z.infer<typeof MemoirSchema>;
+const EditMemoirForm = ({id, onClose}: {id: string; onClose: () => void}) => {
   const {sheet, setSheet} = useAppSheet();
-  const {mutate: createNote, isPending} = useCreateNote();
+  const {data: note, isLoading: isNoteLoading} = useNoteById(id, {
+    select: data => data.data
+  });
   const {data: teachers, isLoading: isTeachersLoading} = useTeachers({page: 1, pageSize: 100}, {select: data => data.data.items});
   const {data: courses, isLoading: isCoursesLoading} = useCourses({page: 1, pageSize: 100}, {select: data => data.data.items});
+  const {mutate: updateNote, isPending} = useUpdateNote();
   const teacherOptions =
     teachers?.map(teacher => ({
       label: teacher.name,
@@ -56,7 +58,7 @@ const AddMemoirForm = ({onClose}: {onClose: () => void}) => {
         primaryAction: {
           ...sheet.primaryAction!,
           disabled: isPending,
-          text: isPending ? 'جاري الإضافة' : 'إضافة'
+          text: isPending ? 'جاري التعديل' : 'تعديل'
         },
         secondaryAction: {
           ...sheet.secondaryAction!,
@@ -64,24 +66,42 @@ const AddMemoirForm = ({onClose}: {onClose: () => void}) => {
         }
       });
   }, [isPending]);
+  
+  useEffect(() => {
+    if (!isNoteLoading && note) {
+      form.reset({
+        name: note.name,
+        courseId: note.courseId,
+        teacherId: note.teacherId,
+        date: note.date
+      });
+    }
+  }, [form, isNoteLoading, note]);
   function onSubmit(values: MemoirFormValues) {
-    createNote(values, {
-      onSuccess: () => {
-        onClose();
+    updateNote(
+      {
+        id,
+        data: values
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        }
       }
-    });
+    );
   }
+  const isLoading = isNoteLoading || isTeachersLoading || isCoursesLoading;
   return (
-    <form id='create-memoir-form' onSubmit={form.handleSubmit(onSubmit)}>
+    <form id='edit-memoir-form' onSubmit={form.handleSubmit(onSubmit)}>
       <FieldSet>
         <FieldGroup>
-          <InputField label='اسم الملزمة' control={form.control} register={form.register('name')} />
-          <SelectField label='المادة' control={form.control} register={{name: 'courseId'}} options={courseOptions} placeholder={isCoursesLoading ? 'جاري التحميل...' : 'اختر المادة'} />
-          <SelectField label='الدكتور' control={form.control} register={{name: 'teacherId'}} options={teacherOptions} placeholder={isTeachersLoading ? 'جاري التحميل...' : 'اختر الدكتور'} />
-          <InputField label='التاريخ' control={form.control} register={form.register('date')} props={{type: 'date'}} />
+          <InputField label='اسم الملزمة' props={{readOnly: isLoading}} control={form.control} register={form.register('name')} />
+          <SelectField label='المادة' control={form.control} register={{name: 'courseId'}} options={courseOptions} placeholder={isCoursesLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{disabled: isLoading}} />
+          <SelectField label='الدكتور' control={form.control} register={{name: 'teacherId'}} options={teacherOptions} placeholder={isTeachersLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading}} />
+          <InputField label='التاريخ' type='date' props={{readOnly: isLoading}} control={form.control} register={form.register('date')} />
         </FieldGroup>
       </FieldSet>
     </form>
   );
 };
-export default AddMemoirForm;
+export default EditMemoirForm;
