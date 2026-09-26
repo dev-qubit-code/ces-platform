@@ -3,4 +3,5 @@ export type TMemoir = {
   name: string;
   course: string;
   lecturer: string;
+  date: string;
 };
