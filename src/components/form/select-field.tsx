@@ -60,9 +60,9 @@ function SelectField<T extends FieldValues>({label, labelClassName, className, s
         <Field className={cn(className)}>
           {label && <FieldLabel className={cn(labelClassName)}>{label}</FieldLabel>}
 
-          <Select {...props} value={field.value} onValueChange={field.onChange}>
+          <Select {...props} value={field.value == null ? undefined : String(field.value)} onValueChange={value => field.onChange(value)}>
             <SelectTrigger className={cn(selectClassName)}>
-              <SelectValue placeholder={placeholder}>{options.find(option => option.value === field.value)?.label}</SelectValue>
+              <SelectValue placeholder={placeholder}>{options.find(option => String(option.value) === String(field.value))?.label}</SelectValue>
             </SelectTrigger>
 
             <SelectContent dir='rtl'>

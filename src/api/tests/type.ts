@@ -1,0 +1,36 @@
+export type TTestsParams = {
+  search?: string;
+  page: number;
+  pageSize: number;
+};
+
+export type TTestResponse = {
+  id: string;
+  courseName: string;
+  teacherName: string;
+  date: string;
+  kind: number;
+};
+
+export type TCreateTestBody = {
+  name?: string;
+  courseId?: string;
+  teacherId?: string;
+  date?: string;
+  kind?: number;
+};
+
+export type TCreateTestResponse = {
+  id: string;
+  name?: string;
+};
+
+export type TUpdateTestBody = TCreateTestBody;
+
+export type TTestByIdResponse = {
+  id: string;
+  date: string;
+  kind: number;
+  teacherId: string;
+  courseId: string;
+};
