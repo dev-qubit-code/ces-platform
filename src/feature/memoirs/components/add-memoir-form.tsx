@@ -9,6 +9,10 @@ import {useEffect} from 'react';
 import {useCreateNote} from '@/api/notes/api';
 import {useTeachers} from '@/api/teacher/api';
 import {useCourses} from '@/api/course/api';
+import {usePaginatedSelect} from '@/hooks/use-paginated-select';
+import type {TLecturers} from '@/feature/lecturers/type';
+import type {TCourse} from '@/feature/courses/type';
+
 const MemoirSchema = z.object({
   name: z.string().min(3, {
     message: 'اسم الملزمة يجب أن يكون 3 أحرف على الأقل'
@@ -27,28 +31,18 @@ export type MemoirFormValues = z.infer<typeof MemoirSchema>;
 
 const AddMemoirForm = ({onClose}: {onClose: () => void}) => {
   const {sheet, setSheet} = useAppSheet();
-  const {mutate: createNote, isPending} = useCreateNote();
-  const {data: teachers, isLoading: isTeachersLoading} = useTeachers({page: 1, pageSize: 100}, {select: data => data.data.items});
-  const {data: courses, isLoading: isCoursesLoading} = useCourses({page: 1, pageSize: 100}, {select: data => data.data.items});
-  const teacherOptions =
-    teachers?.map(teacher => ({
-      label: teacher.name,
-      value: teacher.id
-    })) ?? [];
-  const courseOptions =
-    courses?.map(course => ({
-      label: course.name,
-      value: course.id
-    })) ?? [];
+
   const form = useForm<MemoirFormValues>({
     resolver: zodResolver(MemoirSchema),
-    defaultValues: {
-      name: '',
-      courseId: '',
-      teacherId: '',
-      date: ''
-    }
+    defaultValues: {name: '', courseId: '', teacherId: '', date: ''}
   });
+  const {mutate: createNote, isPending} = useCreateNote();
+
+  const teachers = usePaginatedSelect<TLecturers>(useTeachers, t => t.name);
+  const courses = usePaginatedSelect<TCourse>(useCourses, c => c.name);
+
+  const isLoading = isPending || teachers.isFirstLoading || courses.isFirstLoading;
+
   useEffect(() => {
     if (sheet)
       setSheet({
@@ -64,6 +58,7 @@ const AddMemoirForm = ({onClose}: {onClose: () => void}) => {
         }
       });
   }, [isPending]);
+
   function onSubmit(values: MemoirFormValues) {
     createNote(values, {
       onSuccess: () => {
@@ -71,14 +66,18 @@ const AddMemoirForm = ({onClose}: {onClose: () => void}) => {
       }
     });
   }
+
   return (
     <form id='create-memoir-form' onSubmit={form.handleSubmit(onSubmit)}>
       <FieldSet>
         <FieldGroup>
-          <InputField label='اسم الملزمة' control={form.control} register={form.register('name')} />
-          <SelectField label='المادة' control={form.control} register={{name: 'courseId'}} options={courseOptions} placeholder={isCoursesLoading ? 'جاري التحميل...' : 'اختر المادة'} />
-          <SelectField label='الدكتور' control={form.control} register={{name: 'teacherId'}} options={teacherOptions} placeholder={isTeachersLoading ? 'جاري التحميل...' : 'اختر الدكتور'} />
-          <InputField label='التاريخ' control={form.control} register={form.register('date')} props={{type: 'date'}} />
+          <InputField label='اسم الملزمة' control={form.control} register={form.register('name')} props={{disabled: isLoading}} />
+
+          <SelectField label='المادة' onLoadMore={courses.loadMore} isLoadingMore={courses.isLoadingMore} control={form.control} register={{name: 'courseId'}} options={courses.options} placeholder={courses.isFirstLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{disabled: isLoading}} />
+
+          <SelectField label='الدكتور' onLoadMore={teachers.loadMore} isLoadingMore={teachers.isLoadingMore} control={form.control} register={{name: 'teacherId'}} options={teachers.options} placeholder={teachers.isFirstLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading}} />
+
+          <InputField label='التاريخ' control={form.control} register={form.register('date')} props={{type: 'date', disabled: isLoading}} />
         </FieldGroup>
       </FieldSet>
     </form>

@@ -28,4 +28,10 @@ export type TUpdateNoteBody = {
   teacherId: string;
 };
 
-export type TNoteByIdResponse = TNoteResponse;
+export type TNoteByIdResponse = {
+  id: string;
+  date: string;
+  name: string;
+  teacherId: string;
+  courseId: string;
+};

@@ -40,9 +40,6 @@ const Memoirs = () => {
     setPageSize
   });
   const data = response?.items;
-  console.log('====================================');
-  console.log(data);
-  console.log('====================================');
   setBreadcrumb(MemoirsBreadcrumb);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -67,10 +64,6 @@ const Memoirs = () => {
       title: 'عرض الملزمة',
       description: 'عرض بيانات الملزمة.',
       content: <ViewMemoirForm id={id} />,
-      primaryAction: {
-        text: 'إغلاق',
-        onClick: onClose
-      },
       secondaryAction: {
         text: 'إغلاق'
       }
