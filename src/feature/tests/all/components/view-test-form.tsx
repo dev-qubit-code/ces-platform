@@ -99,9 +99,9 @@ const ViewTestForm = ({id}: {id: string}) => {
         <FieldGroup>
           <InputField label='اسم الاختبار' control={form.control} register={form.register('name')} props={{readOnly: true, disabled: isLoading}} />
 
-          <SelectField label='المادة' control={form.control} isLoadingMore={isCoursesLoading} register={{name: 'courseId'}} options={courseOptions} onLoadMore={handleLoadMoreCourses} placeholder={isCoursesLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{readOnly: true, disabled: isLoading}} />
+          <SelectField label='المادة' control={form.control} isLoadingMore={isCoursesLoading} register={{name: 'courseId'}} options={courseOptions} onLoadMore={handleLoadMoreCourses} placeholder={isCoursesLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{readOnly: true, disabled: isLoading, defaultValue: test?.courseName}} />
 
-          <SelectField label='الدكتور' control={form.control} isLoadingMore={isTeachersLoading} register={{name: 'teacherId'}} options={teacherOptions} onLoadMore={handleLoadMoreTeachers} placeholder={isTeachersLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{readOnly: true, disabled: isLoading}} />
+          <SelectField label='الدكتور' control={form.control} isLoadingMore={isTeachersLoading} register={{name: 'teacherId'}} options={teacherOptions} onLoadMore={handleLoadMoreTeachers} placeholder={isTeachersLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{readOnly: true, disabled: isLoading, defaultValue: test?.teacherName}} />
 
           <InputField label='التاريخ' control={form.control} register={form.register('date')} props={{readOnly: true, disabled: isLoading, type: 'date'}} />
 

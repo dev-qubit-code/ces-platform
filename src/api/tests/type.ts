@@ -1,9 +1,11 @@
+import type {TEST_STATUS, TTestStatus} from '@/enum/test-status.enum';
+
 export type TTestsParams = {
   search?: string;
   page: number;
   pageSize: number;
+  Status?: TTestStatus;
 };
-
 export type TTestResponse = {
   id: string;
   courseName: string;
@@ -33,4 +35,7 @@ export type TTestByIdResponse = {
   kind: number;
   teacherId: string;
   courseId: string;
+  status: TTestStatus;
+  teacherName: string;
+  courseName: string;
 };

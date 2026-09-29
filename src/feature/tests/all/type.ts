@@ -7,6 +7,7 @@ export type TTest = {
   id: string;
   name: string;
   lecturer: string;
+  course: string;
   image: string;
   publishedAt: string;
   type: TestType;

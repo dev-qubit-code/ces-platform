@@ -5,6 +5,7 @@ import {Edit, Eye, MoreHorizontal, Trash} from 'lucide-react';
 import type {TBreadcrumb} from '@/components/header';
 import {formatDate} from '@/lib/utils';
 import {TestStatus, TestTypeStatus, type TTest} from './type';
+import {Badge} from '@/components/ui/badge';
 
 export const AllTestBreadcrumb: TBreadcrumb[] = [
   {title: 'الرئيسية', url: '/'},
@@ -28,12 +29,16 @@ export function GetTestColumns({onView, onUpdate, onDelete}: GetTestColumnsProps
       header: 'اسم الدكتور / دكتورة'
     },
     {
+      accessorKey: 'course',
+      header: 'اسم المادة'
+    },
+    {
       accessorKey: 'type',
       header: 'نوع الاختبار',
       cell: ({row}) => {
         const type = row.original.type;
-        const {name} = TestTypeStatus[type];
-        return <span>{name}</span>;
+        const {name, variant} = TestTypeStatus[type];
+        return <Badge variant={variant}>{name}</Badge>;
       }
     },
     {
@@ -46,8 +51,8 @@ export function GetTestColumns({onView, onUpdate, onDelete}: GetTestColumnsProps
       header: 'حالة الاختبار',
       cell: ({row}) => {
         const status = row.original.status;
-        const {name} = TestStatus[status];
-        return <span>{name}</span>;
+        const {name, variant} = TestStatus[status];
+        return <Badge variant={variant}>{name}</Badge>;
       }
     },
     {

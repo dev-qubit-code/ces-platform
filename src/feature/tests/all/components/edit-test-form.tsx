@@ -103,8 +103,8 @@ const EditTestForm = ({id, onClose}: {id: string; onClose: () => void}) => {
       <FieldSet>
         <FieldGroup>
           <InputField label='اسم الاختبار' props={{readOnly: isLoading}} control={form.control} register={form.register('name')} />
-          <SelectField label='المادة' onLoadMore={courses.loadMore} isLoadingMore={courses.isLoadingMore} control={form.control} register={{name: 'courseId'}} options={courses.options} placeholder={courses.isFirstLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{disabled: isLoading}} />
-          <SelectField label='الدكتور' onLoadMore={teachers.loadMore} isLoadingMore={teachers.isLoadingMore} control={form.control} register={{name: 'teacherId'}} options={teachers.options} placeholder={teachers.isFirstLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading}} />
+          <SelectField label='المادة' onLoadMore={courses.loadMore} isLoadingMore={courses.isLoadingMore} control={form.control} register={{name: 'courseId'}} options={courses.options} placeholder={courses.isFirstLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{disabled: isLoading, defaultValue: test?.courseName}} />
+          <SelectField label='الدكتور' onLoadMore={teachers.loadMore} isLoadingMore={teachers.isLoadingMore} control={form.control} register={{name: 'teacherId'}} options={teachers.options} placeholder={teachers.isFirstLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading, defaultValue: test?.teacherName}} />
           <InputField label='التاريخ' props={{readOnly: isLoading, type: 'date'}} control={form.control} register={form.register('date')} />
           <SelectField
             label='نوع الاختبار'

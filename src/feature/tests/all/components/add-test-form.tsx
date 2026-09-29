@@ -23,7 +23,7 @@ const TestSchema = z.object({
   teacherId: z.string().min(1, {
     message: 'الدكتور مطلوب'
   }),
-  date: z.string().min(1, {
+  testDate: z.string().min(1, {
     message: 'التاريخ مطلوب'
   }),
   kind: z.coerce.number<number>().min(0).max(2)
@@ -36,7 +36,7 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
 
   const form = useForm<TestFormValues>({
     resolver: zodResolver(TestSchema),
-    defaultValues: {name: '', courseId: '', teacherId: '', date: '', kind: 0}
+    defaultValues: {name: '', courseId: '', teacherId: '', testDate: '', kind: 0}
   });
 
   const {mutate: createTest, isPending} = useCreateTest();
@@ -85,7 +85,7 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
 
           <SelectField label='الدكتور' onLoadMore={teachers.loadMore} isLoadingMore={teachers.isLoadingMore} control={form.control} register={{name: 'teacherId'}} options={teachers.options} placeholder={teachers.isFirstLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading}} />
 
-          <InputField label='التاريخ' control={form.control} register={form.register('date')} props={{type: 'date', disabled: isLoading}} />
+          <InputField label='التاريخ' control={form.control} register={form.register('testDate')} props={{type: 'date', disabled: isLoading}} />
 
           <SelectField
             label='نوع الاختبار'

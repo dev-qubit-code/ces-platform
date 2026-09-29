@@ -28,8 +28,7 @@ const AllTest = () => {
     {
       page,
       pageSize,
-      // TODO: FIX From BC
-      search: undefined
+      search: searchDebounce,
     },
     {
       select: data => data.data,

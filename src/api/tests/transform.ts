@@ -12,6 +12,8 @@ export function TestsDtoTransform(data: TTestResponse[]): TTest[] {
     id: item.id,
     name: item.courseName,
     lecturer: item.teacherName,
+    course: item.courseName,
+    // TODO: Add It From BC
     image: '',
     publishedAt: item.date,
     type: TestKindMap[item.kind] ?? 'monthly',
