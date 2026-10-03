@@ -3,11 +3,12 @@ import {useMutation, useQuery, type UseMutationOptions, type UseQueryOptions} fr
 import {toast} from 'sonner';
 
 import {api, queryClient, VERSION_ONE} from '../instance';
-import {TESTS} from '../api-endpoint';
+import {STATUS, TESTS} from '../api-endpoint';
 import type {TPaginationResponse} from '../type';
 import type {TCreateTestBody, TCreateTestResponse, TTestByIdResponse, TTestResponse, TTestsParams, TUpdateTestBody} from './type';
 import {TestsDtoTransform} from './transform';
 import type {TTest} from '@/feature/tests/all/type';
+import type {TTestStatus} from '@/enum/test-status.enum';
 
 export const TESTS_KEY = (params?: TTestsParams) => ['TESTS', params] as const;
 
@@ -37,6 +38,10 @@ function updateTest({id, data}: {id: string; data: TUpdateTestBody}) {
 
 function deleteTest(id: string) {
   return api.delete<TTestResponse>(`${VERSION_ONE}/${TESTS}/${id}`);
+}
+
+function changeTestStatus({id, status}: {id: string; status: TTestStatus}) {
+  return api.put<TTestResponse>(`${VERSION_ONE}/${TESTS}/${id}/${STATUS}`, {status});
 }
 
 export function useTests<TData = AxiosResponse<TPaginationResponse<TTest>>>(params: TTestsParams, queryOption?: Omit<UseQueryOptions<AxiosResponse<TPaginationResponse<TTest>>, Error, TData, ReturnType<typeof TESTS_KEY>>, 'queryKey' | 'queryFn'>) {
@@ -120,6 +125,22 @@ export function useDeleteTest(option?: Omit<UseMutationOptions<AxiosResponse<TTe
 
       toast.success('تم حذف الاختبار', {
         description: 'تم حذف الاختبار بنجاح.'
+      });
+
+      option?.onSuccess?.(...args);
+    }
+  });
+}
+
+export function useChangeTestStatus(option?: Omit<UseMutationOptions<AxiosResponse<TTestResponse>, Error, {id: string; status: TTestStatus}>, 'mutationFn' | 'mutationKey'>) {
+  return useMutation<AxiosResponse<TTestResponse>, Error, {id: string; status: TTestStatus}>({
+    ...option,
+    mutationKey: [...TESTS_KEY(), 'change-status'],
+    mutationFn: ({id, status}) => changeTestStatus({id, status}),
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({
+        queryKey: [TESTS_KEY()[0]],
+        exact: false
       });
 
       option?.onSuccess?.(...args);

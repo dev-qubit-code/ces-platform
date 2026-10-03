@@ -10,17 +10,17 @@ import {useTests} from '@/api/tests';
 import {TEST_STATUS} from '@/enum/test-status.enum';
 import {PendingTestBreadcrumb, GetPendingTestColumns} from './helper';
 import ViewTestForm from '../all/components/view-test-form';
+import {useChangeTestStatus} from '@/api/tests/api';
 
 const PendingTest = () => {
   const setBreadcrumb = useHeader(state => state.setBreadcrumb);
 
   const {setSheet} = useAppSheet();
-  const {setDialog, onClose: onDialogClose} = useAppDialog();
+  const {dialog, setDialog, onClose: onDialogClose} = useAppDialog();
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
-
   const searchDebounce = useDebounce(search);
 
   setBreadcrumb(PendingTestBreadcrumb);
@@ -37,6 +37,7 @@ const PendingTest = () => {
       placeholderData: preData => preData
     }
   );
+  const {mutate: changeStatusMutate, isPending: isChangeStatusPending} = useChangeTestStatus();
 
   const paginationProps = usePagination({
     pagination: response,
@@ -70,9 +71,7 @@ const PendingTest = () => {
       primaryAction: {
         text: 'اعتماد الاختبار',
         onClick: () => {
-          // approve mutation هنا
-          console.log('approve:', id);
-
+          changeStatusMutate({id, status: TEST_STATUS.approved});
           onDialogClose();
         }
       },
@@ -91,8 +90,7 @@ const PendingTest = () => {
         text: 'رفض الاختبار',
         className: 'bg-destructive hover:bg-destructive/90',
         onClick: () => {
-          console.log('reject:', id);
-
+          changeStatusMutate({id, status: TEST_STATUS.notApproved});
           onDialogClose();
         }
       },
@@ -101,6 +99,23 @@ const PendingTest = () => {
       }
     });
   }
+
+  useEffect(() => {
+    if (!dialog) return;
+    setDialog({
+      ...dialog,
+      primaryAction: {
+        ...dialog.primaryAction!,
+        text: isChangeStatusPending ? 'جاري تغيير حالة الاختبار' : 'تغيير حالة الاختبار',
+        disabled: isChangeStatusPending
+      },
+      secondaryAction: {
+        ...dialog.secondaryAction!,
+        disabled: isChangeStatusPending
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChangeStatusPending]);
 
   const columns = GetPendingTestColumns({
     onView,

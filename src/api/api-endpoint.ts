@@ -7,3 +7,4 @@ export const REPORTS = 'reports';
 export const AUTH = 'auth';
 export const NOTES = 'notes';
 export const TESTS = 'tests';
+export const STATUS = 'status';
