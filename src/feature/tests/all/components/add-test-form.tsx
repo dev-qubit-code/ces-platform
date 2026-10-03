@@ -64,7 +64,10 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
   function onSubmit(values: TestFormValues) {
     createTest(
       {
-        ...values,
+        name: values.name,
+        courseId: values.courseId,
+        teacherId: values.teacherId,
+        date: values.testDate,
         kind: Number(values.kind)
       },
       {

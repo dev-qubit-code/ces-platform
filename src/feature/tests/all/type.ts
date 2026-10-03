@@ -35,7 +35,8 @@ export const TestStatus: Record<
     variant: VariantProps<typeof badgeVariants>['variant'];
   }
 > = {
+  none: {name: 'غير معتمد', variant: 'default'},
   pending: {name: 'موقفة', variant: 'invert-light'},
   approved: {name: 'تم الموافقة عليها', variant: 'success'},
-  rejected: {name: 'مرفوقة', variant: 'destructive'}
+  notApproved: {name: 'مرفوقة', variant: 'destructive'}
 };

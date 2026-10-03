@@ -60,7 +60,7 @@ const ViewTestForm = ({id}: {id: string}) => {
   useEffect(() => {
     if (!isTestLoading && test) {
       form.reset({
-        name: test.id,
+        name: test.testName,
         courseId: test.courseId,
         teacherId: test.teacherId,
         date: test.date,

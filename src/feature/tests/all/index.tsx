@@ -14,6 +14,7 @@ import {DeleteTestForm} from './components/delete-test-form';
 import {useDeleteTest, useTests} from '@/api/tests/api';
 import {usePagination} from '@/hooks/use-pagination';
 import {useDebounce} from '@/hooks/use-debounce';
+import {TEST_STATUS} from '@/enum/test-status.enum';
 
 const AllTest = () => {
   const {setSheet, onClose} = useAppSheet();
@@ -29,6 +30,7 @@ const AllTest = () => {
       page,
       pageSize,
       search: searchDebounce,
+      Status: TEST_STATUS.none
     },
     {
       select: data => data.data,

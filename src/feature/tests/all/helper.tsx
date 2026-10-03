@@ -50,7 +50,7 @@ export function GetTestColumns({onView, onUpdate, onDelete}: GetTestColumnsProps
       accessorKey: 'status',
       header: 'حالة الاختبار',
       cell: ({row}) => {
-        const status = row.original.status;
+        const status = row.original.status;        
         const {name, variant} = TestStatus[status];
         return <Badge variant={variant}>{name}</Badge>;
       }

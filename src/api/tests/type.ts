@@ -1,4 +1,4 @@
-import type {TEST_STATUS, TTestStatus} from '@/enum/test-status.enum';
+import type {TTestStatus} from '@/enum/test-status.enum';
 
 export type TTestsParams = {
   search?: string;
@@ -9,9 +9,13 @@ export type TTestsParams = {
 export type TTestResponse = {
   id: string;
   courseName: string;
+  testName: string;
   teacherName: string;
   date: string;
   kind: number;
+  courseId: string;
+  teacherId: string;
+  status: TTestStatus;
 };
 
 export type TCreateTestBody = {
@@ -34,6 +38,7 @@ export type TTestByIdResponse = {
   date: string;
   kind: number;
   teacherId: string;
+  testName: string;
   courseId: string;
   status: TTestStatus;
   teacherName: string;
