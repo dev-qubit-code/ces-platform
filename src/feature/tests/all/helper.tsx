@@ -1,104 +1,90 @@
-import {Badge} from '@/components/ui/badge';
-import {TestStatus, TestTypeStatus, type TTest} from './type';
 import type {ColumnDef} from '@tanstack/react-table';
+import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {Button} from '@/components/ui/button';
-import {EyeIcon, Trash2} from 'lucide-react';
+import {Edit, Eye, MoreHorizontal, Trash} from 'lucide-react';
 import type {TBreadcrumb} from '@/components/header';
+import {formatDate} from '@/lib/utils';
+import {TestStatus, TestTypeStatus, type TTest} from './type';
+import {Badge} from '@/components/ui/badge';
 
 export const AllTestBreadcrumb: TBreadcrumb[] = [
   {title: 'الرئيسية', url: '/'},
-  {
-    title: 'الاختبارات',
-    url: '/tests/all'
-  }
-];
-export const TestColumns: ColumnDef<TTest>[] = [
-  {
-    accessorKey: 'name',
-    header: 'اسم المادة'
-  },
-  {
-    accessorKey: 'lecturer',
-    header: 'اسم الدكتور / دكتورة'
-  },
-  {
-    accessorKey: 'type',
-    header: 'نوع الاختبار',
-    cell: ({row}) => {
-      const type = row.original.type;
-      const {name, variant} = TestTypeStatus[type];
-      return <Badge variant={variant}>{name}</Badge>;
-    }
-  },
-  {
-    accessorKey: 'publishedAt',
-    header: 'سنة الاختبار'
-  },
-  {
-    accessorKey: 'status',
-    header: 'جالة الاختبار',
-    cell: ({row}) => {
-      const status = row.original.status;
-      const {name, variant} = TestStatus[status];
-      return <Badge variant={variant}>{name}</Badge>;
-    }
-  },
-  {
-    header: 'الاجاراءات',
-    cell: () => {
-      return (
-        <div className='flex gap-2'>
-          <Button variant={'outline'} size={'icon-lg'}>
-            <EyeIcon />
-          </Button>
-          <Button variant={'destructive'} size={'icon-lg'}>
-            <Trash2 />
-          </Button>
-        </div>
-      );
-    }
-  }
+  {title: 'الاختبارات', url: '/tests/all'}
 ];
 
-export const mockTestData: TTest[] = [
-  {
-    name: 'Data Structures',
-    lecturer: 'Dr. Ahmed Saleh',
-    image: '/images/tests/data-structures.jpg',
-    publishedAt: '2026-08-01',
-    type: 'monthly',
-    status: 'approved'
-  },
-  {
-    name: 'Operating Systems',
-    lecturer: 'Dr. Mohammed Ali',
-    image: '/images/tests/os.jpg',
-    publishedAt: '2026-07-28',
-    type: 'midterm',
-    status: 'pending'
-  },
-  {
-    name: 'Database Systems',
-    lecturer: 'Dr. Fatima Omar',
-    image: '/images/tests/database.jpg',
-    publishedAt: '2026-07-20',
-    type: 'final',
-    status: 'pending'
-  },
-  {
-    name: 'Computer Networks',
-    lecturer: 'Dr. Khaled Hassan',
-    image: '/images/tests/networks.jpg',
-    publishedAt: '2026-07-15',
-    type: 'monthly',
-    status: 'rejected'
-  },
-  {
-    name: 'Software Engineering',
-    lecturer: 'Dr. Sara Ali',
-    image: '/images/tests/software.jpg',
-    publishedAt: '2026-07-10',
-    type: 'final',
-    status: 'approved'
-  }
-];
+interface GetTestColumnsProps {
+  onView: (id: string) => void;
+  onUpdate: (id: string) => void;
+  onDelete: ({id, name}: {id: string; name: string}) => void;
+}
+
+export function GetTestColumns({onView, onUpdate, onDelete}: GetTestColumnsProps): ColumnDef<TTest>[] {
+  return [
+    {
+      accessorKey: 'name',
+      header: 'اسم الاختبار'
+    },
+    {
+      accessorKey: 'lecturer',
+      header: 'اسم الدكتور / دكتورة'
+    },
+    {
+      accessorKey: 'course',
+      header: 'اسم المادة'
+    },
+    {
+      accessorKey: 'type',
+      header: 'نوع الاختبار',
+      cell: ({row}) => {
+        const type = row.original.type;
+        const {name, variant} = TestTypeStatus[type];
+        return <Badge variant={variant}>{name}</Badge>;
+      }
+    },
+    {
+      accessorKey: 'publishedAt',
+      header: 'تاريخ الاختبار',
+      cell: ({row}) => formatDate(row.original.publishedAt)
+    },
+    {
+      accessorKey: 'status',
+      header: 'حالة الاختبار',
+      cell: ({row}) => {
+        const status = row.original.status;        
+        const {name, variant} = TestStatus[status];
+        return <Badge variant={variant}>{name}</Badge>;
+      }
+    },
+    {
+      id: 'actions',
+      header: 'الإجراءات',
+      cell: props => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onView(props.row.original.id)}>
+                <Eye className='ml-2 h-4 w-4' />
+                عرض الاختبار
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onUpdate(props.row.original.id)}>
+                <Edit className='ml-2 h-4 w-4' />
+                تعديل
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete({id: props.row.original.id, name: props.row.original.name})} className='text-destructive'>
+                <Trash className='ml-2 h-4 w-4' />
+                حذف
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+  ];
+}

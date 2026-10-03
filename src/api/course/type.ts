@@ -7,8 +7,8 @@ export type TCoursesParams = {
 export type TCourseResponse = {
   id: string;
   name: string;
-  countOfTests: number;
-  countOfNotes: number;
+  testsCount: number;
+  notesCount: number;
 };
 
 export type TCreateCourseBody = {

@@ -4,8 +4,10 @@ import type {VariantProps} from 'class-variance-authority';
 
 export type TestType = 'monthly' | 'midterm' | 'final';
 export type TTest = {
+  id: string;
   name: string;
   lecturer: string;
+  course: string;
   image: string;
   publishedAt: string;
   type: TestType;
@@ -33,7 +35,8 @@ export const TestStatus: Record<
     variant: VariantProps<typeof badgeVariants>['variant'];
   }
 > = {
+  none: {name: 'غير معتمد', variant: 'default'},
   pending: {name: 'موقفة', variant: 'invert-light'},
   approved: {name: 'تم الموافقة عليها', variant: 'success'},
-  rejected: {name: 'مرفوقة', variant: 'destructive'}
+  notApproved: {name: 'مرفوقة', variant: 'destructive'}
 };
