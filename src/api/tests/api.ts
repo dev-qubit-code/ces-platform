@@ -3,7 +3,7 @@ import {useMutation, useQuery, type UseMutationOptions, type UseQueryOptions} fr
 import {toast} from 'sonner';
 
 import {api, queryClient, VERSION_ONE} from '../instance';
-import {STATUS, TESTS} from '../api-endpoint';
+import {APPROVED, STATUS, TESTS} from '../api-endpoint';
 import type {TPaginationResponse} from '../type';
 import type {TCreateTestBody, TCreateTestResponse, TTestByIdResponse, TTestResponse, TTestsParams, TUpdateTestBody} from './type';
 import {TestsDtoTransform} from './transform';
@@ -30,6 +30,9 @@ async function getTestById(id: string) {
 
 function createTest(body: TCreateTestBody) {
   return api.post<TCreateTestResponse>(`${VERSION_ONE}/${TESTS}`, body);
+}
+function createApprovedTest(body: TCreateTestBody) {
+  return api.post<TCreateTestResponse>(`${VERSION_ONE}/${TESTS}/${APPROVED}`, body);
 }
 
 function updateTest({id, data}: {id: string; data: TUpdateTestBody}) {
@@ -65,6 +68,25 @@ export function useCreateTest(option?: Omit<UseMutationOptions<AxiosResponse<TCr
     ...option,
     mutationKey: [...TESTS_KEY(), 'create'],
     mutationFn: data => createTest(data),
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({
+        queryKey: [TESTS_KEY()[0]],
+        exact: false
+      });
+
+      toast.success('تم إنشاء الاختبار', {
+        description: 'تم إنشاء الاختبار بنجاح.'
+      });
+
+      option?.onSuccess?.(...args);
+    }
+  });
+}
+export function useCreateApprovedTest(option?: Omit<UseMutationOptions<AxiosResponse<TCreateTestResponse>, Error, TCreateTestBody>, 'mutationFn' | 'mutationKey'>) {
+  return useMutation<AxiosResponse<TCreateTestResponse>, Error, TCreateTestBody>({
+    ...option,
+    mutationKey: [...TESTS_KEY(), 'create'],
+    mutationFn: data => createApprovedTest(data),
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
         queryKey: [TESTS_KEY()[0]],

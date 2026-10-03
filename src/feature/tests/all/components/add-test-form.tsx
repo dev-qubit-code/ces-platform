@@ -6,7 +6,7 @@ import InputField from '@/components/form/input-field';
 import SelectField from '@/components/form/select-field';
 import {useAppSheet} from '@/store/sheet-store';
 import {useEffect} from 'react';
-import {useCreateTest} from '@/api/tests/api';
+import {useCreateApprovedTest} from '@/api/tests/api';
 import {useTeachers} from '@/api/teacher/api';
 import {useCourses} from '@/api/course/api';
 import {usePaginatedSelect} from '@/hooks/use-paginated-select';
@@ -39,7 +39,7 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
     defaultValues: {name: '', courseId: '', teacherId: '', testDate: '', kind: 0}
   });
 
-  const {mutate: createTest, isPending} = useCreateTest();
+  const {mutate: createTest, isPending} = useCreateApprovedTest();
   const teachers = usePaginatedSelect<TLecturers>(useTeachers, t => t.name);
   const courses = usePaginatedSelect<TCourse>(useCourses, c => c.name);
 
