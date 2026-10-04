@@ -90,6 +90,13 @@ export function getRouters(role: UserRole) {
                 const {default: Component} = await import('@/feature/about');
                 return {Component};
               }
+            },
+            {
+              path: '/news',
+              lazy: async () => {
+                const {default: Component} = await import('@/feature/news');
+                return {Component};
+              }
             }
           ]
         }
