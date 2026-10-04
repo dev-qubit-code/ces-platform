@@ -14,9 +14,6 @@ import type {TCourse} from '@/feature/courses/type';
 import {useTestById, useUpdateTest} from '@/api/tests/api';
 
 const TestSchema = z.object({
-  name: z.string().min(3, {
-    message: 'اسم الاختبار يجب أن يكون 3 أحرف على الأقل'
-  }),
   courseId: z.string().min(1, {
     message: 'المادة مطلوبة'
   }),
@@ -43,7 +40,6 @@ const EditTestForm = ({id, onClose}: {id: string; onClose: () => void}) => {
   const form = useForm<TestFormValues>({
     resolver: zodResolver(TestSchema),
     defaultValues: {
-      name: '',
       courseId: '',
       teacherId: '',
       date: '',
@@ -70,7 +66,6 @@ const EditTestForm = ({id, onClose}: {id: string; onClose: () => void}) => {
   useEffect(() => {
     if (!isTestLoading && test) {
       form.reset({
-        name: test.id,
         courseId: test.courseId,
         teacherId: test.teacherId,
         date: test.date,
@@ -102,7 +97,6 @@ const EditTestForm = ({id, onClose}: {id: string; onClose: () => void}) => {
     <form id='edit-test-form' onSubmit={form.handleSubmit(onSubmit)}>
       <FieldSet>
         <FieldGroup>
-          <InputField label='اسم الاختبار' props={{readOnly: isLoading}} control={form.control} register={form.register('name')} />
           <SelectField label='المادة' onLoadMore={courses.loadMore} isLoadingMore={courses.isLoadingMore} control={form.control} register={{name: 'courseId'}} options={courses.options} placeholder={courses.isFirstLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{disabled: isLoading, defaultValue: test?.courseName}} />
           <SelectField label='الدكتور' onLoadMore={teachers.loadMore} isLoadingMore={teachers.isLoadingMore} control={form.control} register={{name: 'teacherId'}} options={teachers.options} placeholder={teachers.isFirstLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading, defaultValue: test?.teacherName}} />
           <InputField label='التاريخ' props={{readOnly: isLoading, type: 'date'}} control={form.control} register={form.register('date')} />

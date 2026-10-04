@@ -5,7 +5,6 @@ import type {VariantProps} from 'class-variance-authority';
 export type TestType = 'monthly' | 'midterm' | 'final';
 export type TTest = {
   id: string;
-  name: string;
   lecturer: string;
   course: string;
   image: string;

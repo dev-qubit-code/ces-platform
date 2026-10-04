@@ -11,7 +11,6 @@ const TestKindMap: Record<number, TestType> = {
 export function TestsDtoTransform(data: TTestResponse[]): TTest[] {
   return data.map(item => ({
     id: item.id,
-    name: item.testName,
     lecturer: item.teacherName,
     course: item.courseName,
     // TODO: Add It From BC

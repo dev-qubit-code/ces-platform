@@ -1,10 +1,6 @@
 import {Trash2} from 'lucide-react';
 
-type DeleteTestFormProps = {
-  name: string;
-};
-
-export function DeleteTestForm({name}: DeleteTestFormProps) {
+export function DeleteTestForm() {
   return (
     <div className='space-y-5'>
       <div className='flex items-center gap-3 rounded-lg border px-4 py-3'>
@@ -12,7 +8,6 @@ export function DeleteTestForm({name}: DeleteTestFormProps) {
           <Trash2 className='size-4 text-destructive' />
         </div>
         <div className='min-w-0'>
-          <p className='truncate text-sm font-medium'>{name}</p>
           <p className='text-xs text-muted-foreground'>الاختبار المحدد</p>
         </div>
       </div>

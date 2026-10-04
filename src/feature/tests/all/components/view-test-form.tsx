@@ -11,7 +11,6 @@ import type {TCourse} from '@/feature/courses/type';
 import {PAGE_SIZE} from '@/lib/constant';
 
 type ViewTestFormValues = {
-  name: string;
   courseId: string;
   teacherId: string;
   date: string;
@@ -29,7 +28,7 @@ const ViewTestForm = ({id}: {id: string}) => {
   const [allCourses, setAllCourses] = useState<TCourse[]>([]);
 
   const form = useForm<ViewTestFormValues>({
-    defaultValues: {name: '', courseId: '', teacherId: '', date: '', kind: 0}
+    defaultValues: {courseId: '', teacherId: '', date: '', kind: 0}
   });
 
   const {data: teachersRes, isLoading: isTeachersLoading, isFetching: isTeachersFetching} = useTeachers({page: teacherPage, pageSize: PAGE_SIZE}, {select: data => data.data});
@@ -60,7 +59,6 @@ const ViewTestForm = ({id}: {id: string}) => {
   useEffect(() => {
     if (!isTestLoading && test) {
       form.reset({
-        name: test.testName,
         courseId: test.courseId,
         teacherId: test.teacherId,
         date: test.date,
@@ -97,8 +95,6 @@ const ViewTestForm = ({id}: {id: string}) => {
     <form>
       <FieldSet>
         <FieldGroup>
-          <InputField label='اسم الاختبار' control={form.control} register={form.register('name')} props={{readOnly: true, disabled: isLoading}} />
-
           <SelectField label='المادة' control={form.control} isLoadingMore={isCoursesLoading} register={{name: 'courseId'}} options={courseOptions} onLoadMore={handleLoadMoreCourses} placeholder={isCoursesLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{readOnly: true, disabled: isLoading, defaultValue: test?.courseName}} />
 
           <SelectField label='الدكتور' control={form.control} isLoadingMore={isTeachersLoading} register={{name: 'teacherId'}} options={teacherOptions} onLoadMore={handleLoadMoreTeachers} placeholder={isTeachersLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{readOnly: true, disabled: isLoading, defaultValue: test?.teacherName}} />
