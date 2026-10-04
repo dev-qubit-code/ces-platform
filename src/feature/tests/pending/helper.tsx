@@ -2,7 +2,8 @@ import {Badge} from '@/components/ui/badge';
 import {Button} from '@/components/ui/button';
 import type {TBreadcrumb} from '@/components/header';
 import type {ColumnDef} from '@tanstack/react-table';
-import {Check, EyeIcon, X} from 'lucide-react';
+import {Check, Eye, MoreHorizontal, X} from 'lucide-react';
+import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
 import {TestTypeStatus} from './type';
 import type { TTest } from '../all/type';
 
@@ -51,21 +52,32 @@ export const GetPendingTestColumns = ({onView, onApprove, onReject}: PendingTest
       const test = row.original;
 
       return (
-        <div className='flex items-center gap-2'>
-          <Button type='button' variant='outline' size='icon-lg' onClick={() => onView(test.id)}>
-            <EyeIcon />
-          </Button>
-
-          <Button type='button' variant='outline' size='icon-lg' onClick={() => onApprove(test.id)}>
-            <Check />
-          </Button>
-
-          <Button type='button' variant='destructive' size='icon-lg' onClick={() => onReject(test.id)}>
-            <X />
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onView(test.id)}>
+                <Eye className='ml-2 h-4 w-4' />
+                عرض الاختبار
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onApprove(test.id)}>
+                <Check className='ml-2 h-4 w-4' />
+                اعتماد الاختبار
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onReject(test.id)} className='text-destructive'>
+                <X className='ml-2 h-4 w-4' />
+                رفض الاختبار
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     }
   }
 ];
-

@@ -71,8 +71,7 @@ const PendingTest = () => {
       primaryAction: {
         text: 'اعتماد الاختبار',
         onClick: () => {
-          changeStatusMutate({id, status: TEST_STATUS.approved});
-          onDialogClose();
+          changeStatusMutate({id, status: TEST_STATUS.approved}, {onSuccess: onDialogClose});
         }
       },
       secondaryAction: {
@@ -90,8 +89,7 @@ const PendingTest = () => {
         text: 'رفض الاختبار',
         className: 'bg-destructive hover:bg-destructive/90',
         onClick: () => {
-          changeStatusMutate({id, status: TEST_STATUS.notApproved});
-          onDialogClose();
+          changeStatusMutate({id, status: TEST_STATUS.notApproved}, {onSuccess: onDialogClose});
         }
       },
       secondaryAction: {
@@ -106,7 +104,7 @@ const PendingTest = () => {
       ...dialog,
       primaryAction: {
         ...dialog.primaryAction!,
-        text: isChangeStatusPending ? 'جاري تغيير حالة الاختبار' : 'تغيير حالة الاختبار',
+        text: dialog.title === 'اعتماد الاختبار' ? (isChangeStatusPending ? 'جاري الاعتماد' : 'اعتماد الاختبار') : isChangeStatusPending ? 'جاري الرفض' : 'رفض الاختبار',
         disabled: isChangeStatusPending
       },
       secondaryAction: {

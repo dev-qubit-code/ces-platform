@@ -11,7 +11,7 @@ import AddTestForm from './components/add-test-form';
 import EditTestForm from './components/edit-test-form';
 import ViewTestForm from './components/view-test-form';
 import {DeleteTestForm} from './components/delete-test-form';
-import {useDeleteTest, useTests} from '@/api/tests/api';
+import {useChangeTestStatus, useDeleteTest, useTests} from '@/api/tests/api';
 import {usePagination} from '@/hooks/use-pagination';
 import {useDebounce} from '@/hooks/use-debounce';
 import {TEST_STATUS} from '@/enum/test-status.enum';
@@ -39,6 +39,7 @@ const AllTest = () => {
   );
 
   const {mutate: deleteTestMutate, isPending: isDeleteTestPending} = useDeleteTest();
+  const {mutate: changeStatusMutate, isPending: isChangeStatusPending} = useChangeTestStatus();
 
   const paginationProps = usePagination({
     pagination: response,
@@ -114,6 +115,21 @@ const AllTest = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeleteTestPending]);
 
+  useEffect(() => {
+    if (!dialog || !['اعتماد الاختبار', 'رفض الاختبار', 'تعليق الاختبار'].includes(dialog.title)) return;
+
+    setDialog({
+      ...dialog,
+      primaryAction: {
+        ...dialog.primaryAction!,
+        disabled: isChangeStatusPending,
+        text: dialog.title === 'اعتماد الاختبار' ? (isChangeStatusPending ? 'جاري الاعتماد' : 'اعتماد الاختبار') : dialog.title === 'تعليق الاختبار' ? isChangeStatusPending ? 'جاري التعليق' : 'تعليق الاختبار' : isChangeStatusPending ? 'جاري الرفض' : 'رفض الاختبار'
+      },
+      secondaryAction: {...dialog.secondaryAction!, disabled: isChangeStatusPending}
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChangeStatusPending]);
+
   function onDelete({id}: {id: string}) {
     setDialog({
       title: 'حذف الاختبار',
@@ -140,10 +156,31 @@ const AllTest = () => {
     });
   }
 
+  function onChangeStatus(id: string, status: typeof TEST_STATUS.approved | typeof TEST_STATUS.notApproved | typeof TEST_STATUS.pending) {
+    const isApproving = status === TEST_STATUS.approved;
+    const isPendingStatus = status === TEST_STATUS.pending;
+    setDialog({
+      title: isApproving ? 'اعتماد الاختبار' : isPendingStatus ? 'تعليق الاختبار' : 'رفض الاختبار',
+      description: isApproving ? 'هل أنت متأكد من اعتماد هذا الاختبار؟' : isPendingStatus ? 'هل أنت متأكد من تعليق هذا الاختبار؟' : 'هل أنت متأكد من رفض هذا الاختبار؟',
+      content: '',
+      primaryAction: {
+        text: isApproving ? 'اعتماد الاختبار' : isPendingStatus ? 'تعليق الاختبار' : 'رفض الاختبار',
+        className: isApproving || isPendingStatus ? undefined : 'bg-destructive hover:bg-destructive/90',
+        onClick: () => {
+          changeStatusMutate({id, status}, {onSuccess: onDialogClose});
+        }
+      },
+      secondaryAction: {text: 'إلغاء'}
+    });
+  }
+
   const columns = GetTestColumns({
     onView,
     onUpdate,
-    onDelete
+    onDelete,
+    onApprove: id => onChangeStatus(id, TEST_STATUS.approved),
+    onReject: id => onChangeStatus(id, TEST_STATUS.notApproved),
+    onPending: id => onChangeStatus(id, TEST_STATUS.pending)
   });
 
   return (
