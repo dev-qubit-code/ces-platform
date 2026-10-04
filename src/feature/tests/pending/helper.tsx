@@ -23,12 +23,12 @@ interface PendingTestColumnsProps {
 
 export const GetPendingTestColumns = ({onView, onApprove, onReject}: PendingTestColumnsProps): ColumnDef<TTest>[] => [
   {
-    accessorKey: 'name',
-    header: 'اسم المادة'
-  },
-  {
     accessorKey: 'lecturer',
     header: 'اسم الدكتور / دكتورة'
+  },
+  {
+    accessorKey: 'name',
+    header: 'اسم المادة'
   },
   {
     accessorKey: 'type',

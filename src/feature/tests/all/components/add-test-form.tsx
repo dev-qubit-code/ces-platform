@@ -14,9 +14,6 @@ import type {TLecturers} from '@/feature/lecturers/type';
 import type {TCourse} from '@/feature/courses/type';
 
 const TestSchema = z.object({
-  name: z.string().min(3, {
-    message: 'اسم الاختبار يجب أن يكون 3 أحرف على الأقل'
-  }),
   courseId: z.string().min(1, {
     message: 'المادة مطلوبة'
   }),
@@ -36,7 +33,7 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
 
   const form = useForm<TestFormValues>({
     resolver: zodResolver(TestSchema),
-    defaultValues: {name: '', courseId: '', teacherId: '', testDate: '', kind: 0}
+    defaultValues: {courseId: '', teacherId: '', testDate: '', kind: 0}
   });
 
   const {mutate: createTest, isPending} = useCreateApprovedTest();
@@ -64,7 +61,6 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
   function onSubmit(values: TestFormValues) {
     createTest(
       {
-        name: values.name,
         courseId: values.courseId,
         teacherId: values.teacherId,
         date: values.testDate,
@@ -82,8 +78,6 @@ const AddTestForm = ({onClose}: {onClose: () => void}) => {
     <form id='create-test-form' onSubmit={form.handleSubmit(onSubmit)}>
       <FieldSet>
         <FieldGroup>
-          <InputField label='اسم الاختبار' control={form.control} register={form.register('name')} props={{disabled: isLoading}} />
-
           <SelectField label='المادة' onLoadMore={courses.loadMore} isLoadingMore={courses.isLoadingMore} control={form.control} register={{name: 'courseId'}} options={courses.options} placeholder={courses.isFirstLoading ? 'جاري التحميل...' : 'اختر المادة'} props={{disabled: isLoading}} />
 
           <SelectField label='الدكتور' onLoadMore={teachers.loadMore} isLoadingMore={teachers.isLoadingMore} control={form.control} register={{name: 'teacherId'}} options={teachers.options} placeholder={teachers.isFirstLoading ? 'جاري التحميل...' : 'اختر الدكتور'} props={{disabled: isLoading}} />

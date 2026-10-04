@@ -9,7 +9,6 @@ export type TTestsParams = {
 export type TTestResponse = {
   id: string;
   courseName: string;
-  testName: string;
   teacherName: string;
   date: string;
   kind: number;
@@ -19,11 +18,10 @@ export type TTestResponse = {
 };
 
 export type TCreateTestBody = {
-  name?: string;
-  courseId?: string;
-  teacherId?: string;
-  date?: string;
-  kind?: number;
+  courseId: string;
+  teacherId: string;
+  date: string;
+  kind: number;
 };
 
 export type TCreateTestResponse = {
@@ -38,7 +36,6 @@ export type TTestByIdResponse = {
   date: string;
   kind: number;
   teacherId: string;
-  testName: string;
   courseId: string;
   status: TTestStatus;
   teacherName: string;

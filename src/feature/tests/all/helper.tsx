@@ -15,15 +15,11 @@ export const AllTestBreadcrumb: TBreadcrumb[] = [
 interface GetTestColumnsProps {
   onView: (id: string) => void;
   onUpdate: (id: string) => void;
-  onDelete: ({id, name}: {id: string; name: string}) => void;
+  onDelete: ({id}: {id: string}) => void;
 }
 
 export function GetTestColumns({onView, onUpdate, onDelete}: GetTestColumnsProps): ColumnDef<TTest>[] {
   return [
-    {
-      accessorKey: 'name',
-      header: 'اسم الاختبار'
-    },
     {
       accessorKey: 'lecturer',
       header: 'اسم الدكتور / دكتورة'
@@ -77,7 +73,7 @@ export function GetTestColumns({onView, onUpdate, onDelete}: GetTestColumnsProps
                 <Edit className='ml-2 h-4 w-4' />
                 تعديل
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete({id: props.row.original.id, name: props.row.original.name})} className='text-destructive'>
+              <DropdownMenuItem onClick={() => onDelete({id: props.row.original.id})} className='text-destructive'>
                 <Trash className='ml-2 h-4 w-4' />
                 حذف
               </DropdownMenuItem>

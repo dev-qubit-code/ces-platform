@@ -114,11 +114,11 @@ const AllTest = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDeleteTestPending]);
 
-  function onDelete({id, name}: {id: string; name: string}) {
+  function onDelete({id}: {id: string}) {
     setDialog({
       title: 'حذف الاختبار',
       description: 'هذا الإجراء لا يمكن التراجع عنه.',
-      content: <DeleteTestForm name={name} />,
+      content: <DeleteTestForm />,
       primaryAction: {
         text: 'حذف الاختبار',
         className: 'bg-destructive hover:bg-destructive/90',
