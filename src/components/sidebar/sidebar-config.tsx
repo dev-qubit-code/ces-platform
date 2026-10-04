@@ -49,6 +49,11 @@ export function getSidebarData(role: UserRole): SidebarData {
             title: 'ملزمة',
             url: '/memoirs',
             icon: Users
+          },
+          {
+            title: 'الاخبار',
+            url: '/news',
+            icon: ListTodo
           }
         ]
       },
