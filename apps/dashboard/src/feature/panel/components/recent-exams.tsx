@@ -14,7 +14,8 @@ export function RecentExams() {
                 <Badge variant={resentStatus[exam.status]}>
                   {exam.status == 'pending' && 'معلق'}
                   {exam.status == 'approved' && 'موافق علية'}
-                  {exam.status == 'rejected' && 'مرفوق'}
+                  {exam.status == 'notApproved' && 'مرفوق'}
+                  {exam.status == 'none' && 'لا يوجد'}
                 </Badge>
               </p>
             </div>
