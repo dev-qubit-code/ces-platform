@@ -1,0 +1,127 @@
+import type {ColumnDef} from '@tanstack/react-table';
+
+import type {TBreadcrumb} from '@/components/header';
+
+import type {TIssue} from './type';
+
+import {DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from '@/components/ui/dropdown-menu';
+
+import {Badge} from '@/components/ui/badge';
+
+import {MoreHorizontal, Eye} from 'lucide-react';
+
+import {Button} from '@/components/ui/button';
+
+export const IssuesBreadcrumb: TBreadcrumb[] = [
+  {
+    title: 'الرئيسية',
+    url: '/'
+  },
+  {
+    title: 'الشكاوى',
+    url: '/issues'
+  }
+];
+
+import type {VariantProps} from 'class-variance-authority';
+import {badgeVariants} from '@/components/ui/badge';
+
+import type {TIssuePriority} from './type';
+import {formatDate} from '@/lib/utils';
+
+export const issuePriority: Record<
+  TIssuePriority,
+  {
+    name: string;
+    variant: VariantProps<typeof badgeVariants>['variant'];
+  }
+> = {
+  low: {
+    name: 'منخفضة',
+    variant: 'secondary'
+  },
+
+  medium: {
+    name: 'متوسطة',
+    variant: 'default'
+  },
+
+  high: {
+    name: 'عالية',
+    variant: 'warning'
+  },
+
+  urgent: {
+    name: 'عاجلة',
+    variant: 'destructive'
+  }
+};
+
+interface GetIssuesColumnsProps {
+  onView: (id: string) => void;
+}
+
+export function GetIssuesColumns({onView}: GetIssuesColumnsProps): ColumnDef<TIssue>[] {
+  return [
+    {
+      accessorKey: 'title',
+      header: 'نص الشكوى'
+    },
+
+    {
+      accessorKey: 'description',
+      header: 'وصف الشكوى',
+
+      cell: ({row}) => <p className='max-w-75 truncate'>{row.original.description}</p>
+    },
+    {
+      accessorKey: 'priority',
+
+      header: 'الأولوية',
+
+      cell: ({row}) => {
+        const priority = issuePriority[row.original.priority];
+
+        return <Badge variant={priority.variant}>{priority.name}</Badge>;
+      }
+    },
+
+    {
+      accessorKey: 'createdAt',
+      header: 'تاريخ الإضافة',
+      cell: ({row}) => {
+        const createdAt = row.original.createdAt;
+        return formatDate(createdAt);
+      }
+    },
+
+    {
+      id: 'actions',
+
+      header: 'الإجراءات',
+
+      cell: ({row}) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost' size='icon'>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent dir='rtl' align='end'>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>الإجراءات</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => onView(row.original.id)}>
+                <Eye className='ml-2 h-4 w-4' />
+                عرض
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+  ];
+}

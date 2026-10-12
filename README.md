@@ -1,75 +1,289 @@
-# React + TypeScript + Vite
+# منصة CES
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+منصة رقمية لإدارة الخدمات والمحتوى الأكاديمي لجمعية هندسة الحاسوب.
+تم بناء المشروع باستخدام **React** و **Vite** و **Next.js** ضمن مستودع موحد
+(**Monorepo**) تديره أداة **Turborepo**.
 
-Currently, two official plugins are available:
+يهدف المشروع إلى توفير تطبيقات مستقلة وقابلة للتوسع، مع مشاركة المكونات
+والإعدادات المشتركة بين التطبيقات بطريقة منظمة وسهلة الصيانة.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## مميزات المنصة
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+توفر المنصة مجموعة من الأدوات الإدارية والأكاديمية، من أهمها:
 
-## Expanding the ESLint configuration
+- لوحة تحكم تعرض الإحصائيات والمعلومات المهمة.
+- إدارة الاختبارات، بما في ذلك الاختبارات الكاملة والمعلقة.
+- إدارة المواد الدراسية.
+- إدارة المحاضرين.
+- إدارة الملازم والمذكرات التعليمية.
+- إدارة الأخبار والمقالات.
+- إدارة ملفات أعمال الطلاب.
+- استقبال ومتابعة الشكاوى.
+- إدارة المستخدمين وفق الصلاحيات.
+- تسجيل الدخول والتحكم في الوصول إلى الصفحات.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## بنية المشروع التقنية
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+يعتمد المشروع على بنية **Monorepo** متعددة التطبيقات، وهي مناسبة لتطوير
+تطبيقات بأسلوب **Microfrontend**؛ حيث يمكن تطوير كل تطبيق وتشغيله ونشره
+بشكل مستقل، مع مشاركة الحزم المشتركة عند الحاجة.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+ces-platform/
+├── apps/
+│   ├── dashboard/          # تطبيق لوحة التحكم - React + Vite
+│   └── web/                # تطبيق الويب - Next.js
+├── packages/
+│   ├── ui/                 # مكونات واجهة مشتركة
+│   ├── eslint-config/      # إعدادات ESLint المشتركة
+│   └── typescript-config/  # إعدادات TypeScript المشتركة
+├── package.json            # أوامر المشروع وإعداداته العامة
+├── pnpm-workspace.yaml     # تعريف مساحات العمل
+└── turbo.json              # إعدادات Turborepo
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### لماذا Monorepo وTurborepo؟
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- إدارة التطبيقات والحزم من مستودع واحد.
+- مشاركة المكونات والإعدادات بدون تكرار.
+- تشغيل المهام على التطبيقات المتأثرة فقط.
+- الاستفادة من التخزين المؤقت لتسريع البناء والفحوصات.
+- سهولة توحيد قواعد التنسيق والفحص بين جميع أجزاء المشروع.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
 
+## المتطلبات
+
+تأكد من تثبيت الأدوات التالية قبل البدء:
+
+- **Node.js** إصدار `24` أو أحدث.
+- **pnpm** إصدار `10` أو أحدث.
+
+يمكن التحقق من الإصدارات بالأوامر التالية:
+
+```bash
+node --version
+pnpm --version
 ```
+
+---
+
+## بدء العمل محليًا
+
+### 1. استنساخ المستودع
+
+```bash
+git clone <repository-url>
+cd ces-platform
+```
+
+### 2. تثبيت الاعتماديات
+
+```bash
+pnpm install
+```
+
+### 3. تشغيل المشروع
+
+لتشغيل التطبيقات التي تحتوي على أمر التطوير:
+
+```bash
+pnpm dev
+```
+
+بعد تشغيل التطبيق، استخدم عناوين URL التي تظهر في الطرفية للوصول إلى
+الواجهات المحلية.
+
+### تشغيل تطبيق واحد فقط
+
+تشغيل لوحة التحكم:
+
+```bash
+pnpm --filter ces-platform-dashboard dev
+```
+
+تشغيل تطبيق الويب:
+
+```bash
+pnpm --filter web dev
+```
+
+---
+
+## أوامر التطوير الأساسية
+
+| الأمر | الاستخدام |
+| --- | --- |
+| `pnpm dev` | تشغيل تطبيقات التطوير |
+| `pnpm build` | بناء التطبيقات والحزم |
+| `pnpm lint` | فحص قواعد ESLint |
+| `pnpm check-types` | فحص أنواع TypeScript |
+| `pnpm format` | تنسيق ملفات TypeScript وMarkdown |
+
+يمكن تشغيل أي أمر على تطبيق محدد باستخدام filter:
+
+```bash
+pnpm --filter <package-name> <command>
+```
+
+مثال:
+
+```bash
+pnpm --filter ces-platform-dashboard build
+```
+
+---
+
+## تنظيم الكود بأسلوب Feature-Driven
+
+يتم تنظيم كود لوحة التحكم حسب **الميزة** بدلًا من تجميع جميع الملفات حسب
+نوعها. هذا يجعل كل جزء من النظام واضحًا ويسهّل تطويره أو تعديله.
+
+```text
+apps/dashboard/src/
+├── feature/
+│   ├── auth/
+│   │   └── login/
+│   ├── courses/
+│   ├── lecturers/
+│   ├── memoirs/
+│   ├── news/
+│   ├── student-portfolios/
+│   ├── tests/
+│   │   ├── all/
+│   │   └── pending/
+│   ├── users/
+│   └── panel/
+├── api/                    # الاتصال بمصادر البيانات
+├── components/             # مكونات مشتركة داخل التطبيق
+├── hooks/                  # React hooks مشتركة
+├── layout/                 # التخطيطات العامة
+├── middlewares/            # المصادقة وحالة المستخدم
+├── routes/                 # تعريف مسارات التطبيق
+├── store/                  # الحالة العامة للتطبيق
+└── lib/                    # الأدوات والثوابت المساعدة
+```
+
+عادةً تحتوي الميزة على الملفات التالية:
+
+```text
+feature/<feature-name>/
+├── index.tsx               # نقطة دخول الميزة
+├── components/             # مكونات خاصة بالميزة
+├── helper.tsx              # دوال مساعدة
+└── type.ts                 # الأنواع الخاصة بالميزة
+```
+
+### أين يوضع الكود؟
+
+- استخدم `feature/` للكود المرتبط بميزة محددة.
+- استخدم `components/` للمكونات المشتركة داخل التطبيق.
+- استخدم `packages/ui` للمكونات التي تحتاجها أكثر من واجهة.
+- استخدم `api/` لتنظيم طلبات البيانات والتحويلات والأنواع المرتبطة بها.
+- استخدم `store/` للحالة العامة التي تشترك فيها عدة ميزات.
+- استخدم `routes/` لإضافة أو تعديل مسارات الصفحات.
+
+---
+
+## إضافة ميزة جديدة
+
+لإضافة ميزة إلى لوحة التحكم:
+
+1. أنشئ مجلدًا جديدًا داخل:
+
+   ```text
+   apps/dashboard/src/feature/<feature-name>
+   ```
+
+2. أضف ملف `index.tsx` ليكون نقطة دخول الميزة.
+3. أضف مجلد `components/` للمكونات الخاصة بالميزة عند الحاجة.
+4. أضف ملفات `type.ts` و`helper.tsx` عند الحاجة.
+5. أنشئ طبقة API الخاصة بالميزة داخل:
+
+   ```text
+   apps/dashboard/src/api/<domain>
+   ```
+
+6. أضف المسار داخل:
+
+   ```text
+   apps/dashboard/src/routes/index.tsx
+   ```
+
+7. أضف الرابط إلى القائمة الجانبية داخل:
+
+   ```text
+   apps/dashboard/src/components/sidebar/sidebar-config.tsx
+   ```
+
+8. شغّل الفحوصات قبل رفع التغييرات:
+
+   ```bash
+   pnpm lint
+   pnpm check-types
+   ```
+
+---
+
+## إرشادات المساهمة
+
+### إنشاء فرع للمهمة
+
+استخدم فرعًا مستقلًا لكل ميزة أو إصلاح:
+
+```bash
+git checkout -b feature/<short-name>
+```
+
+أمثلة:
+
+```bash
+git checkout -b feature/add-courses-filter
+git checkout -b fix/login-validation
+```
+
+### قبل فتح Pull Request
+
+تأكد من تنفيذ الخطوات التالية:
+
+1. تحديث الفرع من الفرع الأساسي.
+2. تشغيل `pnpm lint`.
+3. تشغيل `pnpm check-types`.
+4. تشغيل `pnpm build` عند إجراء تغييرات مؤثرة على البناء.
+5. مراجعة التغييرات والتأكد من عدم إضافة ملفات أو أسرار غير مطلوبة.
+
+### رفع التغييرات
+
+```bash
+git add .
+git commit -m "feat: add courses filter"
+git push -u origin feature/<short-name>
+```
+
+بعد ذلك، افتح Pull Request واشرح باختصار:
+
+- ما الذي تم تغييره؟
+- ما سبب التغيير؟
+- كيف تم اختبار التغيير؟
+- هل توجد ملاحظات أو خطوات إضافية للمراجعة؟
+
+---
+
+## إرشادات مهمة
+
+- حافظ على مبدأ فصل المسؤوليات بين الميزات.
+- تجنب وضع منطق خاص بميزة داخل مكونات عامة.
+- استخدم المكونات المشتركة بدلًا من تكرارها.
+- لا تضع مفاتيح API أو كلمات المرور داخل المستودع.
+- حدّث الأنواع المرتبطة بالبيانات عند تعديل شكل الاستجابة.
+- اجعل أسماء الملفات والمجلدات واضحة ومتوافقة مع النمط المتبع في المشروع.
+
+---
+
+## الترخيص
+
+يخضع هذا المشروع للترخيص والسياسات المعتمدة من مالكي منصة CES.
