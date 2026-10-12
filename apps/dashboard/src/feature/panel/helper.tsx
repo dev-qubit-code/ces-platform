@@ -88,5 +88,6 @@ export const recentExamsData: TRecentExams[] = [
 export const resentStatus: Record<TTestStatus, VariantProps<typeof badgeVariants>['variant']> = {
   pending: 'invert-light',
   approved: 'success',
-  rejected: 'destructive'
+  notApproved: 'destructive',
+  none: 'secondary'
 };
