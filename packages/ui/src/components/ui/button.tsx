@@ -13,6 +13,7 @@ const buttonVariants = cva("group/button inline-flex shrink-0 items-center justi
       destructive: 'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
       link: 'text-primary underline-offset-4 hover:underline',
       'website-primary': 'px-4! py-5 bg-[#1670B8] shadow-[0_6px_0_#0E4E84,inset_10px_10px_20px_rgba(255,255,255,0.258824),inset_-10px_-12px_22px_rgba(6,58,104,0.4)] rounded-[22px] text-white',
+      'website-white': 'px-4! py-5 bg-[#EEF5FA] shadow-[0_5px_0_#C7DAEA,inset_4px_4px_8px_rgba(255,255,255,0.8)] rounded-[15px] text-[#1C2A39]',
       'website-secondary': 'bg-website-secondary text-website-secondary-foreground hover:bg-website-secondary/80',
       'website-destructive': 'bg-website-destructive text-website-destructive-foreground hover:bg-website-destructive/80',
       'website-ice-cream': 'px-4! py-5 bg-[#F7D774] drop-shadow-[0_5px_1px_#CFA52A] shadow-md shadow-[#BE8C0A47] rounded-2xl text-black'
