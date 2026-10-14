@@ -60,6 +60,13 @@ const Filters = () => {
 
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
   }
+  function handleClearFilters() {
+    setSearchFilter('');
+    setLevelFilter('all');
+    setTestFilter('all');
+    setYearFilter('all');
+      router.push(pathname);
+  }
   const searchDebounced = useDebounce(searchFilter);
   const levelDebounced = useDebounce(levelFilter);
   const testDebounced = useDebounce(testFilter);
@@ -96,7 +103,7 @@ const Filters = () => {
       <BrandBox className='max-w-80 px-5 py-4 rounded-2xl space-y-4'>
         <div className='flex justify-between items-center mb-4'>
           <h5 className='text-2xl font-bold'>تصفية</h5>
-          <Button variant={'link'} className={'text-[#1468AE]'}>
+          <Button variant={'link'} className={'text-[#1468AE]'} onClick={handleClearFilters}>
             مسح الكل
           </Button>
         </div>
