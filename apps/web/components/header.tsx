@@ -19,7 +19,7 @@ const Header = () => {
         <ul className='flex gap-2 items-center'>
           <HeaderItem href='/' title='الرئيسية' path={path} />
           <HeaderItem href='/tests' title='الاختبارات' path={path} />
-          <HeaderItem href='/memorize' title='الملازم' path={path} />
+          <HeaderItem href='/memoirs' title='الملازم' path={path} />
           <HeaderItem href='/students' title='دليل الطلاب' path={path} />
           <HeaderItem href='/news' title='الأخبار' path={path} />
           <HeaderItem href='/about' title='عن الجمعية' path={path} />

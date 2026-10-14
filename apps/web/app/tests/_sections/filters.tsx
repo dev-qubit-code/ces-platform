@@ -99,7 +99,6 @@ const Filters = () => {
 
   if (!isMounted) return null;
   return (
-    <div>
       <BrandBox className='max-w-80 px-5 py-4 rounded-2xl space-y-4'>
         <div className='flex justify-between items-center mb-4'>
           <h5 className='text-2xl font-bold'>تصفية</h5>
@@ -140,7 +139,6 @@ const Filters = () => {
           <Select label='السنة' options={years} defaultValue={yearFilter} value={yearFilter} onValueChange={val => setYearFilter(val)} />
         </div>
       </BrandBox>
-    </div>
   );
 };
 
