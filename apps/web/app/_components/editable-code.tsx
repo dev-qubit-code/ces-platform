@@ -1,12 +1,15 @@
 'use client';
 
-import {useState} from 'react';
-import Editor from '@monaco-editor/react';
+import {useEffect, useState} from 'react';
 import type {Monaco} from '@monaco-editor/react';
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(() => import('@monaco-editor/react'), {ssr: false});
 
 interface EditableCodeProps {
   initialCode: string;
   language?: string;
+  path: string;
   height?: string;
   onRun?: (code: string) => void | Promise<void>;
 }
@@ -27,9 +30,16 @@ const defineTransparentTheme = (monaco: Monaco) => {
   });
 };
 
-export default function EditableCode({initialCode, language = 'typescript', height = '260px', onRun}: EditableCodeProps) {
+export default function EditableCode({initialCode, path, language = 'typescript', height = '260px', onRun}: EditableCodeProps) {
   const [code, setCode] = useState(initialCode);
   const [isRunning, setIsRunning] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVisible(true);
+    return () => setVisible(false);
+  }, []);
 
   async function handleRun() {
     if (isRunning) return;
@@ -53,39 +63,47 @@ export default function EditableCode({initialCode, language = 'typescript', heig
         </div>
       )}
 
-      <Editor
-        height={height}
-        language={language}
-        theme='ces-transparent'
-        value={code}
-        onChange={value => setCode(value ?? '')}
-        beforeMount={defineTransparentTheme}
-        options={{
-          automaticLayout: true,
-          minimap: {enabled: false},
-          lineNumbers: 'off',
-          folding: false,
-          glyphMargin: false,
-          lineDecorationsWidth: 12,
-          lineNumbersMinChars: 0,
-          renderLineHighlight: 'none',
-          scrollBeyondLastLine: false,
-          overviewRulerLanes: 0,
-          hideCursorInOverviewRuler: true,
-          contextmenu: false,
-          fontSize: 13,
-          lineHeight: 24,
-          fontFamily: 'monospace',
-          padding: {top: 16, bottom: 16},
-          wordWrap: 'on',
-          guides: {indentation: false},
-          scrollbar: {
-            vertical: 'auto',
-            horizontal: 'hidden',
-            verticalScrollbarSize: 6
-          }
-        }}
-      />
+      {visible ? (
+        <Editor
+          key={path}
+          height={height}
+          language={language}
+          path={path}
+          theme='ces-transparent'
+          value={code}
+          onChange={value => setCode(value ?? '')}
+          beforeMount={defineTransparentTheme}
+          saveViewState={false}
+          keepCurrentModel={false}
+          options={{
+            automaticLayout: true,
+            minimap: {enabled: false},
+            lineNumbers: 'off',
+            folding: false,
+            glyphMargin: false,
+            lineDecorationsWidth: 12,
+            lineNumbersMinChars: 0,
+            renderLineHighlight: 'none',
+            scrollBeyondLastLine: false,
+            overviewRulerLanes: 0,
+            hideCursorInOverviewRuler: true,
+            contextmenu: false,
+            fontSize: 13,
+            lineHeight: 24,
+            fontFamily: 'monospace',
+            padding: {top: 16, bottom: 16},
+            wordWrap: 'on',
+            guides: {indentation: false},
+            scrollbar: {
+              vertical: 'auto',
+              horizontal: 'hidden',
+              verticalScrollbarSize: 6
+            }
+          }}
+        />
+      ) : (
+        <div style={{height}} />
+      )}
     </div>
   );
 }

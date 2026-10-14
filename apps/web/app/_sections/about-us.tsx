@@ -28,6 +28,7 @@ const AboutUsSections = () => {
         <div className='flex-1'>
           <CodeBox className='h-50' hasActionWindow>
             <EditableCode
+              path='info.ts'
               initialCode={`$ git log --oneline
 a3f9c1 add exams filters
 7b21e4 student portfolio page

@@ -30,7 +30,7 @@ export default function CodeBoxAndFunctionality() {
   return (
     <BrandBox variant='light-blue' className='p-4 flex-2'>
       <CodeBox hasActionWindow fileName='exams.ts' className='h-full'>
-        <EditableCode initialCode={initialCode} language='typescript' onRun={handleSearch} />
+        <EditableCode initialCode={initialCode} path='exams.ts' language='typescript' onRun={handleSearch} />
       </CodeBox>
     </BrandBox>
   );
