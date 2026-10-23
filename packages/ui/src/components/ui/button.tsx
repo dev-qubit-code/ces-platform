@@ -17,7 +17,8 @@ const buttonVariants = cva("group/button inline-flex shrink-0 items-center justi
       'website-secondary': 'bg-website-secondary text-website-secondary-foreground hover:bg-website-secondary/80',
       'website-destructive': 'bg-website-destructive text-website-destructive-foreground hover:bg-website-destructive/80',
       'website-ice-cream': 'px-4! py-5 bg-[#F7D774] drop-shadow-[0_5px_1px_#CFA52A] shadow-md shadow-[#BE8C0A47] rounded-2xl text-black',
-      'website-vanilla': 'px-4! py-5 bg-[#FFB79C] drop-shadow-[0_5px_1px_#DB7653] shadow-md shadow-[#D7644147] rounded-2xl text-black'
+      'website-vanilla': 'px-4! py-5 bg-[#FFB79C] drop-shadow-[0_5px_1px_#DB7653] shadow-md shadow-[#D7644147] rounded-2xl text-black',
+      'website-purple': 'px-4! py-5 bg-[#5B3FC4] drop-shadow-[0_5px_1px_#3E2896] shadow-md shadow-[#FFFFFF33] rounded-2xl text-white'
     },
     size: {
       default: 'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2',
