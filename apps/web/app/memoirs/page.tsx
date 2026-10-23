@@ -3,6 +3,8 @@ import BannerSection from './_sections/banner';
 import Filters from './_sections/filters';
 import Select from '@/components/select';
 import FileCard, {FileCardProps} from './_components/file-card';
+import BrandBox from '@/components/brand-box';
+import { Button } from '@repo/ui/components/ui/button';
 const sortOptions = [
   {label: 'الأحدث', value: 'latest'},
   {label: 'الأقدم', value: 'oldest'},
@@ -72,7 +74,7 @@ const page = () => {
   return (
     <div className='custom-container'>
       <BannerSection />
-      <div className='flex items-start gap-10 mt-10'>
+      <div className='flex items-start gap-10 my-10'>
         {/* filters */}
         <Suspense>
           <Filters />
@@ -91,6 +93,13 @@ const page = () => {
           </div>
         </div>
       </div>
+      <BrandBox variant='black' className='p-8 flex items-center justify-between rounded-3xl'>
+        <div className='space-y-3'>
+          <h3 className='text-4xl font-bold'>عندك ملزمة أو ملخص مفيد؟</h3>
+          <p>شاركه مع زملائك. يراجعه فريق الجمعية وينشره باسمك إذا حبيت.</p>
+        </div>
+        <Button variant={'website-vanilla'}>ارفع ملزمة</Button>
+      </BrandBox>
     </div>
   );
 };
