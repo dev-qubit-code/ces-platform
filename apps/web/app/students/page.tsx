@@ -2,6 +2,7 @@ import {Button} from '@repo/ui/components/ui/button';
 import BannerSection from './_sections/banner';
 import Filters from './_sections/filters';
 import StudentItem, {StudentItemProps} from './components/student-item';
+import {Suspense} from 'react';
 
 const listOfStudents: StudentItemProps[] = [
   {
@@ -39,7 +40,9 @@ const page = () => {
       <BannerSection />
       <div>
         {/* Filter */}
-        <Filters />
+        <Suspense>
+          <Filters />
+        </Suspense>
         <span className='font-bold'>8 طالب</span>
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
           {listOfStudents.map((student, index) => (
