@@ -2,17 +2,15 @@
 import BrandBox from '@/components/brand-box';
 import {Badge} from '@repo/ui/components/ui/badge';
 import {cn} from 'cn';
-import {getNewsStatus, formatNewsDate} from '../_lib/news-utils';
 
 interface NewsContentProps {
   title: string;
   description: string;
-  date: string;
+  status: string;
+  formattedDate: string;
 }
 
-export function NewsContent({title, description, date}: NewsContentProps) {
-  const status = getNewsStatus(date);
-  const formattedDate = formatNewsDate(date);
+export function NewsContent({title, description, formattedDate, status}: NewsContentProps) {
   const isExpired = status === 'منتهي';
 
   return (

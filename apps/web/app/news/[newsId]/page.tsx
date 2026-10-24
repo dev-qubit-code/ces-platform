@@ -5,7 +5,7 @@ import {NewsCover} from './_sections/news-cover';
 import {NewsContent} from './_sections/news-content';
 import {NewsActions} from './_sections/news-actions';
 import {Button} from '@repo/ui/components/ui/button';
-
+import {getNewsStatus, formatNewsDate} from './_lib/news-utils';
 export interface NewsItem {
   id: string;
   title: string;
@@ -24,13 +24,14 @@ const getNewsById = async (id: string): Promise<NewsItem | null> => {
   };
 };
 
-export default async function NewsDetailsPage({params}: {params: {id: string}}) {
-  const newsItem = await getNewsById(params.id);
-
+export default async function NewsDetailsPage({params}: {params: Promise<{newsId: string}>}) {
+  const {newsId} = await params;
+  const newsItem = await getNewsById(newsId);
   if (!newsItem) {
     notFound();
   }
-
+  const status = getNewsStatus(newsItem.date);
+  const formattedDate = formatNewsDate(newsItem.date);
   return (
     <div className='custom-container mx-auto py-10' dir='rtl'>
       <div className='mb-6'>
@@ -46,7 +47,7 @@ export default async function NewsDetailsPage({params}: {params: {id: string}}) 
 
       <div className='grid grid-cols-1 gap-8 lg:grid-cols-3 relative'>
         <div className='lg:col-span-2'>
-          <NewsContent title={newsItem.title} description={newsItem.description} date={newsItem.date} />
+          <NewsContent title={newsItem.title} description={newsItem.description} status={status} formattedDate={formattedDate} />
         </div>
 
         <aside className='relative'>

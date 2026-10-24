@@ -1,4 +1,3 @@
-'use client';
 export const getNewsStatus = (date: string): 'منتهي' | 'قادم' => {
   return new Date(date).getTime() < Date.now() ? 'منتهي' : 'قادم';
 };
