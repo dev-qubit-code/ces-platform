@@ -1,0 +1,20 @@
+'use client';
+import BrandBox from '@/components/brand-box';
+const BannerSection = () => {
+  return (
+    <BrandBox variant='dark-blue' className='w-full h-80 flex justify-between items-center p-12'>
+      <div className='space-y-5 flex-2'>
+        <span className='block'>الرئيسية / الأخبار</span>
+        <h1 className='text-7xl mb-6 font-bold'>جمعية هندســـة الحاسوب</h1>
+        <p className='text-xl w-100 text-gray-400'>[نبذة عن الجمعية] مثال: جمعية طلابية لطلاب قسم هندسة الحاسوب في [اسم الجامعة]، تنظّم الدورات والفعاليات وتجمع المصادر الدراسية، وتقرّب الطلاب من سوق العمل.</p>
+      </div>
+      <div className='flex gap-4 relative me-5'>
+        <BrandBox variant='light-blue' className='rounded-3xl size-20 text-3xl text-black flex justify-center items-center font-bold relative bottom-2.5 rotate-10'>S</BrandBox>
+        <BrandBox className='rounded-3xl size-20 text-3xl text-black flex justify-center items-center font-bold'>E</BrandBox>
+        <BrandBox variant='light-blue' className='rounded-3xl size-20 text-3xl text-black flex justify-center items-center font-bold relative bottom-2.5 -rotate-10'>C</BrandBox>
+      </div>
+    </BrandBox>
+  );
+};
+
+export default BannerSection;
