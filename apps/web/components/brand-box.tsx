@@ -1,7 +1,7 @@
 import {cn} from 'cn';
 import React from 'react';
 
-const boxVariants = {
+export const boxVariants = {
   default: 'bg-[#FBFDFF] drop-shadow-[0_10px_1px_#C7DAEA] shadow-[inset_-8px_-10px_18px_#4682B41F,inset_8px_8px_16px_#FFFFFFF2] rounded-[48px]',
   'dark-blue': 'bg-[#1670B8] shadow-[0_10px_0_#0E4E84,inset_10px_10px_20px_rgba(255,255,255,0.258824),inset_-10px_-12px_22px_rgba(6,58,104,0.4)] rounded-[48px] text-white',
   'light-blue': 'bg-[#8FCDF2] shadow-[0_10px_0_#4C9FD3,inset_10px_10px_20px_rgba(255,255,255,0.6),inset_-10px_-12px_22px_rgba(40,125,180,0.301961)] rounded-[48px]',
