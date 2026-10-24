@@ -14,13 +14,14 @@ export const boxVariants = {
 };
 export interface BrandBoxProps {
   className?: string;
+  onClick?: () => void;
   variant?: keyof typeof boxVariants;
   children?: React.ReactNode;
   dir?: 'ltr' | 'rtl';
 }
-const BrandBox = ({className, dir = 'rtl', variant, children}: BrandBoxProps) => {
+const BrandBox = ({className,onClick, dir = 'rtl', variant, children}: BrandBoxProps) => {
   return (
-    <div dir={dir} className={cn('rounded-4xl', boxVariants[variant || 'default'], className)}>
+    <div onClick={onClick} dir={dir} className={cn('rounded-4xl', boxVariants[variant || 'default'], className)}>
       {children}
     </div>
   );

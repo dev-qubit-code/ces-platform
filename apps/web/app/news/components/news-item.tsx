@@ -6,14 +6,16 @@ import Image from 'next/image';
 import PaperBg from '@/public/home/paper.png';
 import {Badge} from '@repo/ui/components/ui/badge';
 import {cn} from 'cn';
+import {useRouter} from 'next/navigation';
 
 export interface NewsItemProps {
+  id: string;
   title: string;
   description: string;
   date: string;
 }
 
-function NewsItem({title, description, date}: NewsItemProps) {
+function NewsItem({id, title, description, date}: NewsItemProps) {
   const [isExpired, setIsExpired] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -29,15 +31,20 @@ function NewsItem({title, description, date}: NewsItemProps) {
   }).format(new Date(`${date}T00:00:00Z`));
 
   const status = isExpired === null ? null : isExpired ? 'منتهي' : 'قادم';
-
+  const router = useRouter();
   return (
-    <BrandBox className='w-full rounded-3xl p-3'>
+    <BrandBox
+      onClick={() => {
+        router.push(`/news/${id}`);
+      }}
+      className='cursor-pointer w-full rounded-3xl p-3 group hover:bg-[#F7F7F7] hover:shadow-[inset_-4px_-4px_10px_rgba(255,255,255,0.749),inset_4px_6px_12px_rgba(28,42,57,0.161)] transition-all duration-300'
+    >
       <div className='flex items-center justify-center rounded-xl bg-[#FFF4CC] shadow-[inset_-4px_-4px_10px_rgba(255,255,255,0.749),inset_4px_6px_12px_rgba(28,42,57,0.161)]'>
         <Image src={PaperBg} alt='Paper bg' className='object-cover' />
       </div>
 
       <div className='p-3'>
-        <h4 className='mb-1 text-xl font-bold'>{title}</h4>
+        <h4 className='mb-1 text-xl font-bold group-hover:underline'>{title}</h4>
 
         <p className='max-h-20 overflow-hidden text-ellipsis text-sm text-muted-foreground'>{description}</p>
 
