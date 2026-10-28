@@ -60,7 +60,7 @@ const Filters = () => {
     [searchParams]
   );
 
-  function FilterChange(type: 'search' | 'level' | 'testType' | 'year', value: string) {
+  function FilterChange(type: 'search' | 'course' | 'lecturer' | 'year', value: string) {
     const queryString = createQueryString(type, value);
 
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
@@ -73,8 +73,8 @@ const Filters = () => {
     router.push(pathname);
   }
   const searchDebounced = useDebounce(searchFilter);
-  const levelDebounced = useDebounce(courseFilter);
-  const testDebounced = useDebounce(lectureFilter);
+  const courseDebounced = useDebounce(courseFilter);
+  const lectureDebounced = useDebounce(lectureFilter);
   const yearDebounced = useDebounce(yearFilter);
 
   useEffect(() => {
@@ -82,19 +82,19 @@ const Filters = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchDebounced]);
   useEffect(() => {
-    if (levelDebounced === '') {
-      FilterChange('level', 'all');
+    if (courseDebounced === '') {
+      FilterChange('course', 'all');
     } else {
-      FilterChange('level', levelDebounced);
+      FilterChange('course', courseDebounced);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [levelDebounced]);
+  }, [courseDebounced]);
   useEffect(() => {
-    if (testDebounced === '') {
-      FilterChange('testType', 'all');
-    } else FilterChange('testType', testDebounced);
+    if (lectureDebounced === '') {
+      FilterChange('lecturer', 'all');
+    } else FilterChange('lecturer', lectureDebounced);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [testDebounced]);
+  }, [lectureDebounced]);
   useEffect(() => {
     if (yearDebounced === '') {
       FilterChange('year', 'all');

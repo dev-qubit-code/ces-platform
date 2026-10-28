@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import Footer from '@/components/footer';
 import {cn} from '@/lib/utils';
 import {Suspense} from 'react';
+import ReactQueryProvider from '@/providers/react-query';
 
 const inter = Inter({subsets: ['latin'], variable: '--font-sans'});
 
@@ -30,11 +31,13 @@ export default function RootLayout({children}: LayoutProps<'/'>) {
   return (
     <html lang='ar' dir='rtl' className={cn('h-full', 'antialiased', geistSans.variable, geistMono.variable, 'font-sans', inter.variable)}>
       <body className='min-h-full flex flex-col bg-[#EDF5FB]'>
-        <Suspense fallback={<div className='h-16' />}>
-          <Header />
-        </Suspense>
-        {children}
-        <Footer />
+        <ReactQueryProvider>
+          <Suspense fallback={<div className='h-16' />}>
+            <Header />
+          </Suspense>
+          {children}
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );
