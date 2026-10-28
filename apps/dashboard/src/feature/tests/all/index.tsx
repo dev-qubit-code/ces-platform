@@ -123,7 +123,7 @@ const AllTest = () => {
       primaryAction: {
         ...dialog.primaryAction!,
         disabled: isChangeStatusPending,
-        text: dialog.title === 'اعتماد الاختبار' ? (isChangeStatusPending ? 'جاري الاعتماد' : 'اعتماد الاختبار') : dialog.title === 'تعليق الاختبار' ? isChangeStatusPending ? 'جاري التعليق' : 'تعليق الاختبار' : isChangeStatusPending ? 'جاري الرفض' : 'رفض الاختبار'
+        text: dialog.title === 'اعتماد الاختبار' ? (isChangeStatusPending ? 'جاري الاعتماد' : 'اعتماد الاختبار') : dialog.title === 'تعليق الاختبار' ? (isChangeStatusPending ? 'جاري التعليق' : 'تعليق الاختبار') : isChangeStatusPending ? 'جاري الرفض' : 'رفض الاختبار'
       },
       secondaryAction: {...dialog.secondaryAction!, disabled: isChangeStatusPending}
     });

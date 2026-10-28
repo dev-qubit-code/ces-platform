@@ -7,17 +7,30 @@ import Image from 'next/image';
 import PdfIcon from '@/public/pdf-icon.png';
 import {Button} from '@repo/ui/components/ui/button';
 import {Badge} from '@repo/ui/components/ui/badge';
+import {useRouter} from 'next/navigation';
 
-export type FileCardProps = {
-  title: string;
+export type TMemories = {
+  id: string;
+  name: string;
   lectureName?: string;
   courseName?: string;
-  onDownload?: () => void;
-  onView?: () => void;
-  className?: string;
+  link?: string;
 };
+interface FileCardProps {
+  memory: TMemories;
+  className?: string;
+}
 
-const FileCard = ({title, lectureName, courseName, onDownload, onView, className}: FileCardProps) => {
+const FileCard = ({memory, className}: FileCardProps) => {
+  const {id, name, lectureName, courseName, link} = memory;
+  const router = useRouter();
+  function onDownload() {
+    // implement download logic here, for now we just navigate to the link if provided
+    router.push(link || '');
+  }
+  function onView() {
+    router.push(`memoirs/${id}`);
+  }
   return (
     <BrandBox variant='default' className={cn('flex w-full items-center gap-4 rounded-xl p-3', className)}>
       {/* PDF icon */}
@@ -25,8 +38,8 @@ const FileCard = ({title, lectureName, courseName, onDownload, onView, className
 
       {/* File information */}
       <div className='flex min-w-0 flex-1 flex-col items-start gap-2'>
-        <h3 title={title} className='w-full truncate text-right text-xl leading-7 font-extrabold text-[#1C2A39]'>
-          {title}
+        <h3 title={name} className='w-full truncate text-right text-xl leading-7 font-extrabold text-[#1C2A39]'>
+          {name}
         </h3>
 
         <div className='flex max-w-full flex-wrap items-center gap-2'>
